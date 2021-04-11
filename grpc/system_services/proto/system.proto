@@ -18,6 +18,14 @@ message GetSystemInfoRequest {}
 
 // 获取系统信息接口返回值
 message GetSystemInfoResponse {
-  int32 cpuPercent = 1;
+  double cpuPercent = 1;
+  double memPercent = 2;
+  double diskPercent = 3;
+  string cpuGHz = 4;
+  int32  cpuCounts = 5;
+  string memTotal = 6;
+  string memUsed = 7;
+  string diskTotal = 8;
+  string diskUsed = 9;
 }
 

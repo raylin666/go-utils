@@ -2,7 +2,7 @@ package server
 
 import (
 	"context"
-	"go-grpcserver/grpc/system_services/internal/logic"
+	"go-grpcserver/grpc/system_services/api/logic"
 	system_services "go-grpcserver/grpc/system_services/proto"
 )
 

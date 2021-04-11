@@ -2,7 +2,7 @@ package grpc_server
 
 import (
 	"fmt"
-	"go-grpcserver/grpc/system_services/internal/server"
+	"go-grpcserver/grpc/system_services/api/server"
 	system_services "go-grpcserver/grpc/system_services/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
