@@ -1,0 +1,23 @@
+syntax = "proto3"; // 版本声明，使用Protocol Buffers v3版本
+
+package system_services;
+
+// 执行生成go语言文件命令,根目录下: protoc -I grpc/system_services/ grpc/system_services/proto/system.proto --go_out=plugins=grpc:grpc
+
+// ./system_services/proto      表示生成的go文件的存放地址，会自动生成目录的。
+// system_services              表示生成的go文件所属的包名
+option go_package = "./system_services/proto;system_services";
+
+service SystemService {
+  // 获取系统信息接口
+  rpc GetSystemInfo (GetSystemInfoRequest) returns (GetSystemInfoResponse) {}
+}
+
+// 获取系统信息接口请求参数
+message GetSystemInfoRequest {}
+
+// 获取系统信息接口返回值
+message GetSystemInfoResponse {
+  int32 cpuPercent = 1;
+}
+
