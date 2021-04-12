@@ -18,14 +18,14 @@ message GetSystemInfoRequest {}
 
 // 获取系统信息接口返回值
 message GetSystemInfoResponse {
-  double cpuPercent = 1;
-  double memPercent = 2;
-  double diskPercent = 3;
-  string cpuGHz = 4;
-  int32  cpuCounts = 5;
-  string memTotal = 6;
-  string memUsed = 7;
-  string diskTotal = 8;
-  string diskUsed = 9;
+  double cpuPercent = 1;    //  CPU使用率
+  double memPercent = 2;    //  内存使用率
+  double diskPercent = 3;   //  磁盘使用率
+  string cpuGHz = 4;        //  CPU主频
+  int32  cpuCounts = 5;     //  CPU核数
+  string memTotal = 6;      //  总内存
+  string memUsed = 7;       //  剩余内存
+  string diskTotal = 8;     //  磁盘总大小
+  string diskUsed = 9;      //  磁盘剩余大小
 }
 

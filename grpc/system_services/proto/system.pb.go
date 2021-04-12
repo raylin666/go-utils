@@ -69,15 +69,15 @@ type GetSystemInfoResponse struct {
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	CpuPercent  float64 `protobuf:"fixed64,1,opt,name=cpuPercent,proto3" json:"cpuPercent,omitempty"`
-	MemPercent  float64 `protobuf:"fixed64,2,opt,name=memPercent,proto3" json:"memPercent,omitempty"`
-	DiskPercent float64 `protobuf:"fixed64,3,opt,name=diskPercent,proto3" json:"diskPercent,omitempty"`
-	CpuGHz      string  `protobuf:"bytes,4,opt,name=cpuGHz,proto3" json:"cpuGHz,omitempty"`
-	CpuCounts   int32   `protobuf:"varint,5,opt,name=cpuCounts,proto3" json:"cpuCounts,omitempty"`
-	MemTotal    string  `protobuf:"bytes,6,opt,name=memTotal,proto3" json:"memTotal,omitempty"`
-	MemUsed     string  `protobuf:"bytes,7,opt,name=memUsed,proto3" json:"memUsed,omitempty"`
-	DiskTotal   string  `protobuf:"bytes,8,opt,name=diskTotal,proto3" json:"diskTotal,omitempty"`
-	DiskUsed    string  `protobuf:"bytes,9,opt,name=diskUsed,proto3" json:"diskUsed,omitempty"`
+	CpuPercent  float64 `protobuf:"fixed64,1,opt,name=cpuPercent,proto3" json:"cpuPercent,omitempty"`   //  CPU使用率
+	MemPercent  float64 `protobuf:"fixed64,2,opt,name=memPercent,proto3" json:"memPercent,omitempty"`   //  内存使用率
+	DiskPercent float64 `protobuf:"fixed64,3,opt,name=diskPercent,proto3" json:"diskPercent,omitempty"` //  磁盘使用率
+	CpuGHz      string  `protobuf:"bytes,4,opt,name=cpuGHz,proto3" json:"cpuGHz,omitempty"`             //  CPU主频
+	CpuCounts   int32   `protobuf:"varint,5,opt,name=cpuCounts,proto3" json:"cpuCounts,omitempty"`      //  CPU核数
+	MemTotal    string  `protobuf:"bytes,6,opt,name=memTotal,proto3" json:"memTotal,omitempty"`         //  总内存
+	MemUsed     string  `protobuf:"bytes,7,opt,name=memUsed,proto3" json:"memUsed,omitempty"`           //  剩余内存
+	DiskTotal   string  `protobuf:"bytes,8,opt,name=diskTotal,proto3" json:"diskTotal,omitempty"`       //  磁盘总大小
+	DiskUsed    string  `protobuf:"bytes,9,opt,name=diskUsed,proto3" json:"diskUsed,omitempty"`         //  磁盘剩余大小
 }
 
 func (x *GetSystemInfoResponse) Reset() {
