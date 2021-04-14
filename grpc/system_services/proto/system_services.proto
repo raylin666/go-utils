@@ -2,7 +2,7 @@ syntax = "proto3"; // 版本声明，使用Protocol Buffers v3版本
 
 package system_services;
 
-// 执行生成go语言文件命令,根目录下: protoc -I grpc/system_services/ grpc/system_services/proto/system.proto --go_out=plugins=grpc:grpc
+// 执行生成go语言文件命令,根目录下: protoc -I grpc/system_services/ grpc/system_services/proto/system_services.proto --go_out=plugins=grpc:grpc
 
 // ./system_services/proto      表示生成的go文件的存放地址，会自动生成目录的。
 // system_services              表示生成的go文件所属的包名
