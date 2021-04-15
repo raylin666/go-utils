@@ -47,6 +47,6 @@ func (l *SystemInfoLogic) GetSystemInfo(request *system_services.GetSystemInfoRe
 		MemTotal:    utils.FormatFileSize(int64(m.Total)),
 		MemUsed:     utils.FormatFileSize(int64(m.Used)),
 		DiskTotal:   utils.FormatFileSize(int64(w.Total)),
-		DiskUsed:    utils.FormatFileSize(int64(w.Used)),
+		DiskUsed:    utils.FormatFileSize(int64(w.Total) - int64(w.Free)),
 	}, nil
 }

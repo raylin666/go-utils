@@ -27,9 +27,19 @@ func TestGetSystemInfo(t *testing.T) {
 	fmt.Println(utils.FormatFileSize(int64(m.Total)))
 	fmt.Println(utils.FormatFileSize(int64(m.Used)))
 
-	//d, _ := disk.Partitions(true)
+	d, _ := disk.Partitions(true)
+	var (
+		total, free uint64
+	)
+	for _, device := range d {
+		usageStat, _ := disk.Usage(device.Mountpoint)
+		total = total + usageStat.Total
+		free = free + usageStat.Free
+	}
+
 	w, _ := disk.Usage("/")
+	fmt.Println(utils.FormatFileSize(int64(w.Total) -  int64(w.Free)))
 	fmt.Println(utils.FormatFileSize(int64(w.Total)))
-	fmt.Println(utils.FormatFileSize(int64(w.Used)))
+	fmt.Println(utils.FormatFileSize(int64(w.Free)))
 	t.Log("success")
 }
