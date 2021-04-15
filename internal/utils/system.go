@@ -22,8 +22,7 @@ func GetMemPercent() float64 {
 
 // 获取 磁盘 使用率
 func GetDiskPercent() float64 {
-	parts, _ := disk.Partitions(true)
-	diskInfo, _ := disk.Usage(parts[0].Mountpoint)
+	diskInfo, _ := disk.Usage("/")
 	return diskInfo.UsedPercent
 }
 
