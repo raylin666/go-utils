@@ -17,7 +17,7 @@ func NewServer()  {
 		return
 	}
 
-	s := grpc.NewServer() // 创建gRPC服务器
+	s := grpc.NewServer() // 创建 GRPC 服务器
 	system_services.RegisterSystemServiceServer(s, &server.SystemService{}) // 在 GRPC 服务端注册服务
 
 	reflection.Register(s) // 在给定的 GRPC 服务器上注册服务器反射服务
