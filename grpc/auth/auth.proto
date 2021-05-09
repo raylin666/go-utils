@@ -1,0 +1,44 @@
+syntax = "proto3"; // 版本声明，使用Protocol Buffers v3版本
+
+package auth;
+
+// 表示生成的go文件的存放地址，会自动生成目录。
+option go_package = "./auth";
+
+// 定义鉴权服务
+service Auth {
+  // 获取 Token 认证接口
+  rpc GetTokenAuth (GetTokenAuthRequest) returns (GetTokenAuthResponse) {}
+  // 验证 Token 认证接口
+  rpc VerifyTokenAuth(VerifyTokenAuthRequest) returns (VerifyTokenAuthResponse) {}
+}
+
+// 获取 Token 认证接口请求参数
+message GetTokenAuthRequest {
+  string Secret = 1;    // 颁布的标识 Secret
+  string UserID = 2;    // 用户唯一标识
+  uint32 TTL = 3;       // 有效时长
+}
+
+// 获取 Token 认证接口返回值
+message GetTokenAuthResponse {
+  string Secret = 1;    // 颁布的标识 Secret
+  string UserID = 2;    // 用户唯一标识
+  uint32 TTL = 3;       // 有效时长
+  string Token = 4;
+}
+
+// 验证 Token 认证接口请求参数
+message VerifyTokenAuthRequest {
+  string Secret = 1;    // 颁布的标识 Secret
+  string Token = 2;
+}
+
+// 验证 Token 认证接口返回值
+message VerifyTokenAuthResponse {
+  string Secret = 1;    // 颁布的标识 Secret
+  string Token = 2;
+  uint32 Code = 3;      // 认证结果状态码
+  string Message = 4;   // 认证结果说明
+  uint64 ExpiresAt = 5; // 过期时间戳
+}

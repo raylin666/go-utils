@@ -1,8 +1,39 @@
 package main
 
-import grpc_server "go-grpcserver/grpc/system_services"
+import (
+	"github.com/raylin666/go-gin-api/initx"
+	"go-server/config"
+	"go-server/internal/server"
+	"sync"
+)
+
+func init()  {
+	var YmlEnvFileName = ".env.yml"
+
+	initx.InitApplication(&initx.Config{
+		YmlEnvFileName: YmlEnvFileName,
+	})
+
+	// 追加配置项
+	config.InitConfig(YmlEnvFileName)
+}
 
 func main()  {
-	// 启动系统服务
-	grpc_server.NewServer()
+	var wg sync.WaitGroup
+
+	wg.Add(2)
+
+	go func() {
+		defer wg.Done()
+		// 创建 HTTP 服务
+		server.NewHttpServer()
+	}()
+
+	go func() {
+		defer wg.Done()
+		// 创建 gRPC 服务
+		server.NewGrpcServer()
+	}()
+
+	wg.Wait()
 }

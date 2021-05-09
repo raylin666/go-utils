@@ -6,8 +6,8 @@ import (
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/mem"
-	system_services "go-grpcserver/grpc/system_services/proto"
-	"go-grpcserver/internal/utils"
+	"go-server/grpc/system/rpc/system"
+	"go-server/internal/utils"
 )
 
 type SystemInfoLogic struct {
@@ -21,10 +21,11 @@ func NewSystemInfoLogic(ctx context.Context) *SystemInfoLogic {
 }
 
 // 获取系统信息
-func (l *SystemInfoLogic) GetSystemInfo(request *system_services.GetSystemInfoRequest) (*system_services.GetSystemInfoResponse, error) {
+func (l *SystemInfoLogic) GetSystemInfo(request *system.GetSystemInfoRequest) (*system.GetSystemInfoResponse, error) {
 	var (
 		cpuGHz = "0GHz"
 	)
+
 	c, _ := cpu.Info()
 	for _, v := range c {
 		if v.Mhz > 0 {
@@ -33,12 +34,10 @@ func (l *SystemInfoLogic) GetSystemInfo(request *system_services.GetSystemInfoRe
 	}
 
 	cpuCounts, _ := cpu.Counts(true)
-
 	m, _ := mem.VirtualMemory()
-
 	w, _ := disk.Usage("/")
 
-	return &system_services.GetSystemInfoResponse{
+	return &system.GetSystemInfoResponse{
 		CpuPercent:  utils.GetCpuPercent(),
 		MemPercent:  utils.GetMemPercent(),
 		DiskPercent: utils.GetDiskPercent(),
