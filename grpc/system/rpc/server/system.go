@@ -6,7 +6,7 @@ import (
 	"go-server/grpc/system/rpc/system"
 )
 
-// 系统信息服务
+// 系统服务
 type System struct {}
 
 // 获取系统信息

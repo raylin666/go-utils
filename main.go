@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/raylin666/go-gin-api/initx"
 	"go-server/config"
+	"go-server/internal/model"
 	"go-server/internal/server"
 	"sync"
 )
@@ -19,6 +20,9 @@ func init()  {
 }
 
 func main()  {
+	model.JwtSecret{}.ExistSecret("")
+
+	return
 	var wg sync.WaitGroup
 
 	wg.Add(2)
