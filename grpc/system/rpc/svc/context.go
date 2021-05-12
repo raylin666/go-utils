@@ -1,4 +1,4 @@
-package srv
+package svc
 
 import "github.com/raylin666/go-gin-api/context"
 

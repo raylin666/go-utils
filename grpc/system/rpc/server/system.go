@@ -9,10 +9,10 @@ import (
 
 // 系统服务
 type SystemServer struct {
-	srvCtx *srv.Context
+	srvCtx *svc.Context
 }
 
-func NewSystemServer(ctx *srv.Context) *SystemServer {
+func NewSystemServer(ctx *svc.Context) *SystemServer {
 	return &SystemServer{
 		srvCtx: ctx,
 	}

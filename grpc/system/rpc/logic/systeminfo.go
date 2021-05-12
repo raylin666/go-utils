@@ -13,10 +13,10 @@ import (
 
 type SystemInfoLogic struct {
 	ctx    context.Context
-	srvCtx *srv.Context
+	srvCtx *svc.Context
 }
 
-func NewSystemInfoLogic(ctx context.Context, srvCtx *srv.Context) *SystemInfoLogic {
+func NewSystemInfoLogic(ctx context.Context, srvCtx *svc.Context) *SystemInfoLogic {
 	return &SystemInfoLogic{
 		ctx:    ctx,
 		srvCtx: srvCtx,

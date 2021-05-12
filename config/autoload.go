@@ -18,6 +18,11 @@ type Config struct {
 			Host 	string `yaml:"Host"`
 			Port    uint16 `yaml:"Port"`
 		} `yaml:"System"`
+		Auth struct{
+			Network string `yaml:"Network"`
+			Host 	string `yaml:"Host"`
+			Port    uint16 `yaml:"Port"`
+		} `yaml:"Auth"`
 	} `yaml:"Grpc"`
 }
 
