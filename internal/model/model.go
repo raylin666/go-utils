@@ -1,11 +1,22 @@
 package model
 
-import (
-	"github.com/raylin666/go-gin-api/pkg/database"
-	"gorm.io/gorm"
+const (
+	DB_DEFAULT = "default"
 )
 
-func GetDefaultDB() *gorm.DB {
-	return database.GetDB("default")
+var (
+	model = new(Model)
+)
+
+type Model struct {
+	JwtSecretModel *JwtSecretModel
+}
+
+func InitModel()  {
+	model.JwtSecretModel = NewJwtSecretModel()
+}
+
+func Get() *Model {
+	return model
 }
 

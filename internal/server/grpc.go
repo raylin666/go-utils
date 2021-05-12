@@ -4,6 +4,7 @@ import (
 	"github.com/raylin666/go-gin-api/pkg/grpc"
 	"go-server/config"
 	"go-server/grpc/system/rpc/server"
+	srv2 "go-server/grpc/system/rpc/srv"
 	"go-server/grpc/system/rpc/system"
 	go_grpc "google.golang.org/grpc"
 )
@@ -16,7 +17,9 @@ func NewGrpcServer() {
 		Host:    config.Get().Grpc.System.Host,
 		Port:    config.Get().Grpc.System.Port,
 		RegisterServer: func(g *go_grpc.Server) {
-			system.RegisterSystemServer(g, &server.System{})
+			ctx := srv2.NewContext()
+			srv := server.NewSystemServer(ctx)
+			system.RegisterSystemServer(g, srv)
 		},
 	})
 }

@@ -17,12 +17,12 @@ func init()  {
 
 	// 追加配置项
 	config.InitConfig(YmlEnvFileName)
+
+	// Model 初始化
+	model.InitModel()
 }
 
 func main()  {
-	model.JwtSecret{}.ExistSecret("")
-
-	return
 	var wg sync.WaitGroup
 
 	wg.Add(2)

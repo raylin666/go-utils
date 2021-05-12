@@ -6,17 +6,20 @@ import (
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/mem"
+	"go-server/grpc/system/rpc/srv"
 	"go-server/grpc/system/rpc/system"
 	"go-server/internal/utils"
 )
 
 type SystemInfoLogic struct {
-	ctx context.Context
+	ctx    context.Context
+	srvCtx *srv.Context
 }
 
-func NewSystemInfoLogic(ctx context.Context) *SystemInfoLogic {
+func NewSystemInfoLogic(ctx context.Context, srvCtx *srv.Context) *SystemInfoLogic {
 	return &SystemInfoLogic{
-		ctx: ctx,
+		ctx:    ctx,
+		srvCtx: srvCtx,
 	}
 }
 
