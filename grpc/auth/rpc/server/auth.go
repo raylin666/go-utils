@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"go-server/grpc/auth/rpc/auth"
-	"go-server/grpc/auth/rpc/srv"
+	"go-server/grpc/auth/rpc/svc"
 )
 
 // 鉴权服务

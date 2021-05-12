@@ -6,7 +6,7 @@ import (
 	"github.com/shirou/gopsutil/cpu"
 	"github.com/shirou/gopsutil/disk"
 	"github.com/shirou/gopsutil/mem"
-	"go-server/grpc/system/rpc/srv"
+	"go-server/grpc/system/rpc/svc"
 	"go-server/grpc/system/rpc/system"
 	"go-server/internal/utils"
 )

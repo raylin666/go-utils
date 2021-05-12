@@ -3,7 +3,7 @@ package server
 import (
 	"context"
 	"go-server/grpc/system/rpc/logic"
-	"go-server/grpc/system/rpc/srv"
+	"go-server/grpc/system/rpc/svc"
 	"go-server/grpc/system/rpc/system"
 )
 
