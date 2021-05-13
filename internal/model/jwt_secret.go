@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/raylin666/go-gin-api/pkg/database"
+	"go-server/pkg/database"
 	"gorm.io/gorm"
 )
 
@@ -18,7 +18,7 @@ type (
 )
 
 func NewJwtSecretModel() *JwtSecretModel {
-	var connection = database.GetDB(DB_DEFAULT)
+	var connection = database.GetDB(database.DefaultDatabaseConnection)
 	return &JwtSecretModel{
 		Connection: connection,
 		Table:      connection.Config.NamingStrategy.TableName("jwt_secret"),

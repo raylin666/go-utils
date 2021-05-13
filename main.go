@@ -1,43 +1,42 @@
 package main
 
 import (
-	"github.com/raylin666/go-gin-api/initx"
+	"github.com/gin-gonic/gin"
 	"go-server/config"
+	"go-server/internal/api/middleware"
+	"go-server/internal/api/router"
+	"go-server/internal/api/server"
+	"go-server/internal/environment"
 	"go-server/internal/model"
-	"go-server/internal/server"
-	"sync"
+	"go-server/pkg/cache"
+	"go-server/pkg/database"
+	"go-server/pkg/logger"
 )
 
 func init()  {
-	var YmlEnvFileName = ".env.yml"
-
-	initx.InitApplication(&initx.Config{
-		YmlEnvFileName: YmlEnvFileName,
-	})
-
-	// 追加配置项
-	config.InitConfig(YmlEnvFileName)
-
-	// Model 初始化
+	// 初始化加载配置文件
+	config.InitAutoloadConfig(".env.yml")
+	// 初始化环境
+	environment.InitEnvironment()
+	// 日志初始化
+	logger.InitLogger()
+	// 数据库初始化
+	database.InitDatabase()
+	// 初始化数据库模型
 	model.InitModel()
+	// 缓存初始化
+	cache.InitRedis()
 }
 
 func main()  {
-	var wg sync.WaitGroup
+	r := &router.Router{
+		Before: func(engine *gin.Engine) {
+			engine.Use(middleware.RequestLoggerWrite())
+		},
+		After: func(engine *gin.Engine) {
+			router.RouterApi(engine)
+		},
+	}
 
-	wg.Add(2)
-
-	go func() {
-		defer wg.Done()
-		// 创建 HTTP 服务
-		server.NewHttpServer()
-	}()
-
-	go func() {
-		defer wg.Done()
-		// 创建 gRPC 服务
-		server.NewGrpcServer()
-	}()
-
-	wg.Wait()
+	server.NewHttpServer(r)
 }

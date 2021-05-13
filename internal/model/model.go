@@ -1,9 +1,5 @@
 package model
 
-const (
-	DB_DEFAULT = "default"
-)
-
 var (
 	model = new(Model)
 )
@@ -13,10 +9,11 @@ type Model struct {
 }
 
 func InitModel()  {
-	model.JwtSecretModel = NewJwtSecretModel()
+	model = &Model{
+		JwtSecretModel: NewJwtSecretModel(),
+	}
 }
 
 func Get() *Model {
 	return model
 }
-

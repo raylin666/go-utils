@@ -1,11 +1,13 @@
 CREATE TABLE `srv_jwt_secret`
 (
     `id`         int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `app`        varchar(36) NOT NULL COMMENT '使用应用名称',
+    `key`        varchar(36) NOT NULL COMMENT '颁布标识 Key',
     `secret`     varchar(80) NOT NULL COMMENT '颁布标识 Secret',
     `created_at` int(11) unsigned NOT NULL DEFAULT '0' COMMENT '创建时间',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`secret`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='JWT 认证颁布标识表';
+    UNIQUE KEY (`key`, `secret`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='JWT 认证颁布标识表';
 
 CREATE TABLE `srv_jwt_users`
 (
@@ -22,4 +24,6 @@ CREATE TABLE `srv_jwt_users`
     PRIMARY KEY (`id`),
     UNIQUE KEY (`user_id`, `secret`) USING BTREE,
     UNIQUE KEY (`token`) USING BTREE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='JWT 认证用户表';
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci COMMENT='JWT 认证用户表';
+
+

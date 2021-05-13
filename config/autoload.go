@@ -1,38 +1,29 @@
 package config
 
 import (
-	"github.com/raylin666/go-gin-api/config"
+	"go-server/config/autoload"
 	"gopkg.in/yaml.v2"
 	"io/ioutil"
 )
 
-var (
-	configs = new(Config)
-)
+var configs = new(Config)
 
 type Config struct {
-	*config.Config
-	Grpc struct{
-		System struct{
-			Network string `yaml:"Network"`
-			Host 	string `yaml:"Host"`
-			Port    uint16 `yaml:"Port"`
-		} `yaml:"System"`
-		Auth struct{
-			Network string `yaml:"Network"`
-			Host 	string `yaml:"Host"`
-			Port    uint16 `yaml:"Port"`
-		} `yaml:"Auth"`
-	} `yaml:"Grpc"`
+	Environment string                       `yaml:"Environment"`
+	App         autoload.App                 `yaml:"App"`
+	Http        autoload.Http                `yaml:"Http"`
+	Database    map[string]autoload.Database `yaml:"Database"`
+	Redis       map[string]autoload.Redis	 `yaml:"Redis"`
+	Logs 		autoload.Logs				 `yaml:"Logs"`
 }
 
-func InitConfig(YmlEnvFileName string) {
-	cYaml, err := ioutil.ReadFile(YmlEnvFileName)
+// 初始化加载配置文件
+func InitAutoloadConfig(envFileName string)  {
+	cYaml, err := ioutil.ReadFile(envFileName)
 	if err != nil {
 		panic(err)
 	}
 
-	configs.Config = config.Get()
 	_ = yaml.Unmarshal(cYaml, &configs)
 }
 
