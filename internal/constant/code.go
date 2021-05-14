@@ -72,6 +72,7 @@ const (
 
 	// ************************     业务状态码     ************************//
 	StatusBsValidationHandleError 		= 10001
+	StatusParamsParseError				= 10002
 
 	// 鉴权服务
 	StatusAuthSecretNotFound			= 60001
@@ -146,6 +147,7 @@ var StatusText = map[int]string{
 	StatusNetworkAuthenticationRequired: "Network Authentication Required",
 
 	StatusBsValidationHandleError: 		 "Validation processing error",
+	StatusParamsParseError:				 "参数解析错误",
 
 	StatusAuthSecretNotFound:			 "颁布标识 Secret 不存在",
 }

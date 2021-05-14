@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-server/config"
+	api_router "go-server/internal/api/http/api"
 	"go-server/internal/api/middleware"
 	"go-server/internal/api/router"
 	"go-server/internal/api/server"
@@ -34,7 +35,7 @@ func main()  {
 			engine.Use(middleware.RequestLoggerWrite())
 		},
 		After: func(engine *gin.Engine) {
-			router.RouterApi(engine)
+			api_router.Router(engine)
 		},
 	}
 

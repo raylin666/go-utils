@@ -2,7 +2,6 @@ package router
 
 import (
 	"github.com/gin-gonic/gin"
-	api_v1 "go-server/internal/api/router/api/v1"
 	"go-server/internal/constant"
 	"go-server/internal/environment"
 )
@@ -45,14 +44,3 @@ func (r *Router) New() *gin.Engine {
 	return engine
 }
 
-// API 接口路由
-func RouterApi(engine *gin.Engine)  {
-	router := engine.Group("/api")
-	{
-		// v1
-		routerGroup := router.Group("/v1")
-		{
-			api_v1.Router(routerGroup)
-		}
-	}
-}
