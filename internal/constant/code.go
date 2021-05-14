@@ -75,7 +75,7 @@ const (
 	StatusParamsParseError				= 10002
 
 	// 鉴权服务
-	StatusAuthSecretNotFound			= 60001
+	StatusAuthKeySecretNotFound			= 60001
 )
 
 var StatusText = map[int]string{
@@ -149,7 +149,7 @@ var StatusText = map[int]string{
 	StatusBsValidationHandleError: 		 "Validation processing error",
 	StatusParamsParseError:				 "参数解析错误",
 
-	StatusAuthSecretNotFound:			 "颁布标识 Secret 不存在",
+	StatusAuthKeySecretNotFound:		 "颁布标识 Key Secret 不存在",
 }
 
 // StatusText returns a text for the HTTP status code. It returns the empty

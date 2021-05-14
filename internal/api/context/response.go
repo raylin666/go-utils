@@ -18,7 +18,7 @@ type ResponseBuilder struct {
 	// 状态码提示信息
 	Message string
 	// 响应内容信息
-	Data H
+	Data interface{}
 	// 响应总时长
 	ResponseTime time.Duration
 	// 响应格式
@@ -89,12 +89,12 @@ func (response *ResponseBuilder) GetMessage() string {
 	return response.Message
 }
 
-func (response *ResponseBuilder) WithData(data H) *ResponseBuilder {
+func (response *ResponseBuilder) WithData(data interface{}) *ResponseBuilder {
 	response.Data = data
 	return response
 }
 
-func (response *ResponseBuilder) GetData() H {
+func (response *ResponseBuilder) GetData() interface{} {
 	return response.Data
 }
 

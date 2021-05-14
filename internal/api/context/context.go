@@ -43,7 +43,7 @@ func ContextHandler(handler ContextHandlerFunc) gin.HandlerFunc {
 }
 
 // API 成功响应
-func (ctx *Context) Success(data H) {
+func (ctx *Context) Success(data interface{}) {
 	ctx.ResponseBuilder.WithCode(constant.StatusOK)
 	ctx.ResponseBuilder.WithData(data)
 	ctx.handlerResponse()
