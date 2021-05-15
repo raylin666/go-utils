@@ -3,6 +3,7 @@ package model
 import (
 	"go-server/pkg/database"
 	"gorm.io/gorm"
+	"time"
 )
 
 type (
@@ -13,7 +14,10 @@ type (
 
 	JwtSecret struct {
 		database.Model
-		Secret string `json:"secret" gorm:"uniqueIndex"`
+		App       string    `json:"app"`
+		Key       string    `json:"key" gorm:"uniqueIndex:key_secret"`
+		Secret    string    `json:"secret" gorm:"uniqueIndex:key_secret"`
+		ExpiredAt time.Time `json:"expired_at"`
 	}
 )
 
@@ -25,14 +29,21 @@ func NewJwtSecretModel() *JwtSecretModel {
 	}
 }
 
-// 判断 Secret 是否存在
-func (model *JwtSecretModel) ExistSecret(secret string) bool {
+// 判断 Key Secret 是否存在
+func (model *JwtSecretModel) ExistKeySecret(key string, secret string) bool {
 	var jwt_secret JwtSecret
-	model.Connection.Table(model.Table).Where("secret = ?", secret).Select("id").First(&jwt_secret)
+	model.Connection.Table(model.Table).Where("`key` = ? AND secret = ?", key, secret).Select("id").First(&jwt_secret)
 
 	if jwt_secret.ID > 0 {
 		return true
 	}
 
 	return false
+}
+
+// 获取 Key Secret 数据
+func (model *JwtSecretModel) GetKeySecretFirst(key string, secret string) *JwtSecret {
+	var jwt_secret *JwtSecret
+	model.Connection.Table(model.Table).Where("`key` = ? AND secret = ?", key, secret).First(&jwt_secret)
+	return jwt_secret
 }

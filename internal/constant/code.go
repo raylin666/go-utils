@@ -73,9 +73,14 @@ const (
 	// ************************     业务状态码     ************************//
 	StatusBsValidationHandleError 		= 10001
 	StatusParamsParseError				= 10002
+	StatusWriteDataError				= 10003
 
 	// 鉴权服务
 	StatusAuthKeySecretNotFound			= 60001
+	StatusAuthKeySecretExpire			= 60002
+	StatusAuthTokenGenerateError        = 60003
+	StatusAuthTokenExpire               = 60004
+	StatusAuthUserDeleted				= 60005
 )
 
 var StatusText = map[int]string{
@@ -148,8 +153,13 @@ var StatusText = map[int]string{
 
 	StatusBsValidationHandleError: 		 "Validation processing error",
 	StatusParamsParseError:				 "参数解析错误",
+	StatusWriteDataError:				 "写入数据失败",
 
 	StatusAuthKeySecretNotFound:		 "颁布标识 Key Secret 不存在",
+	StatusAuthKeySecretExpire:			 "颁布标识 Key Secret 已过期",
+	StatusAuthTokenGenerateError:        "Token 生成失败",
+	StatusAuthTokenExpire:				 "Token 已过期",
+	StatusAuthUserDeleted:				 "鉴权用户已被删除,请联系管理员",
 }
 
 // StatusText returns a text for the HTTP status code. It returns the empty

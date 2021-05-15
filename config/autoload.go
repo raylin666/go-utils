@@ -14,6 +14,7 @@ type Config struct {
 	Http        autoload.Http                `yaml:"Http"`
 	Database    map[string]autoload.Database `yaml:"Database"`
 	Redis       map[string]autoload.Redis	 `yaml:"Redis"`
+	Jwt         autoload.Jwt				 `yaml:"Jwt"`
 	Logs 		autoload.Logs				 `yaml:"Logs"`
 }
 
