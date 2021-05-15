@@ -88,3 +88,43 @@ func (l *AuthLogic) GetTokenAuthLogic(req params.GetTokenAuthReq) (*params.GetTo
 		ExpiredAt: secretUser.ExpiredAt,
 	}, true
 }
+
+// 验证 Token 认证
+func (l *AuthLogic) VerifyTokenAuthLogic(req params.VerifyTokenAuthReq) (*params.VerifyTokenAuthResp, bool) {
+	getKeySecret := model.Get().JwtSecretModel.GetKeySecretFirst(req.Key, req.Secret)
+	if getKeySecret.ID <= 0 {
+		l.ctx.ResponseBuilder.WithCode(constant.StatusAuthKeySecretNotFound)
+		return nil, false
+	}
+
+	// 判断 Key Secret 是否已过期
+	if getKeySecret.ExpiredAt.Before(time.Now()) {
+		l.ctx.ResponseBuilder.WithCode(constant.StatusAuthKeySecretExpire)
+		return nil, false
+	}
+
+	tokenUser := model.Get().JwtUsersModel.GetTokenUser(req.Token, int(getKeySecret.ID))
+	if tokenUser.ID <= 0 {
+		l.ctx.ResponseBuilder.WithCode(constant.StatusAuthUserNotFound)
+		return nil, false
+	}
+
+	// 判断是否过期
+	if tokenUser.ExpiredAt.Before(time.Now()) {
+		l.ctx.ResponseBuilder.WithCode(constant.StatusAuthTokenExpire)
+		return nil, false
+	}
+
+	// 判断是否已删除
+	if tokenUser.DeletedAt != nil {
+		l.ctx.ResponseBuilder.WithCode(constant.StatusAuthUserDeleted)
+		return nil, false
+	}
+
+	return &params.VerifyTokenAuthResp{
+		Key:       getKeySecret.Key,
+		Secret:    getKeySecret.Secret,
+		Token:     tokenUser.Token,
+		ExpiredAt: tokenUser.ExpiredAt,
+	}, true
+}

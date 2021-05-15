@@ -81,6 +81,7 @@ const (
 	StatusAuthTokenGenerateError        = 60003
 	StatusAuthTokenExpire               = 60004
 	StatusAuthUserDeleted				= 60005
+	StatusAuthUserNotFound				= 60006
 )
 
 var StatusText = map[int]string{
@@ -160,6 +161,7 @@ var StatusText = map[int]string{
 	StatusAuthTokenGenerateError:        "Token 生成失败",
 	StatusAuthTokenExpire:				 "Token 已过期",
 	StatusAuthUserDeleted:				 "鉴权用户已被删除,请联系管理员",
+	StatusAuthUserNotFound:				 "Token 用户不存在",
 }
 
 // StatusText returns a text for the HTTP status code. It returns the empty

@@ -11,6 +11,7 @@ func Auth(routerGroup *gin.RouterGroup) *gin.RouterGroup {
 	router := routerGroup.Group("/auth")
 	{
 		router.POST("/token", context.ContextHandler(controller.GetTokenAuth))
+		router.POST("/token/verify", context.ContextHandler(controller.VerifyTokenAuth))
 	}
 	return router
 }

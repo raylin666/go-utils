@@ -26,3 +26,23 @@ func GetTokenAuth(ctx *context.Context)  {
 	}
 }
 
+// 验证 Token 认证
+func VerifyTokenAuth(ctx *context.Context)  {
+	var req params.VerifyTokenAuthReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		ctx.Error(constant.StatusParamsParseError)
+		return
+	}
+
+	if valid := ctx.RequestValidate(req); valid {
+		l := logic.NewAuthLogic(ctx)
+		resp, ok := l.VerifyTokenAuthLogic(req)
+		if !ok {
+			ctx.Error(ctx.ResponseBuilder.Code)
+		} else {
+			ctx.Success(resp)
+		}
+	}
+}
+
+

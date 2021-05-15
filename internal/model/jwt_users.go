@@ -41,6 +41,13 @@ func (model *JwtUsersModel) GetSecretUser(user_id string, secret_id int) *JwtUse
 	return jwt_users
 }
 
+// 获取 Token 数据
+func (model *JwtUsersModel) GetTokenUser(token string, secret_id int) *JwtUsers {
+	var jwt_users *JwtUsers
+	model.Connection.Table(model.Table).Where("token = ? AND secret_id = ?", token, secret_id).First(&jwt_users)
+	return jwt_users
+}
+
 // 创建用户数据
 func (model *JwtUsersModel) Create(jwtUsers *JwtUsers) uint64 {
 	result := model.Connection.Table(model.Table).Create(jwtUsers)
