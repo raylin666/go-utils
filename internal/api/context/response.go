@@ -19,6 +19,10 @@ type ResponseBuilder struct {
 	Message string
 	// 响应内容信息
 	Data interface{}
+	// 请求开始时间
+	RequestStartTime time.Time
+	// 请求结束时间
+	RequestEndTime time.Time
 	// 响应总时长
 	ResponseTime time.Duration
 	// 响应格式
@@ -123,3 +127,22 @@ func (response *ResponseBuilder) WithFormat(format string) *ResponseBuilder {
 func (response *ResponseBuilder) GetFormat() string {
 	return response.Format
 }
+
+func (response *ResponseBuilder) WithRequestStartTime(duration time.Time) *ResponseBuilder {
+	response.RequestStartTime = duration
+	return response
+}
+
+func (response *ResponseBuilder) GetRequestStartTime() time.Time {
+	return response.RequestStartTime
+}
+
+func (response *ResponseBuilder) WithRequestEndTime(duration time.Time) *ResponseBuilder {
+	response.RequestEndTime = duration
+	return response
+}
+
+func (response *ResponseBuilder) GetRequestEndTime() time.Time {
+	return response.RequestEndTime
+}
+

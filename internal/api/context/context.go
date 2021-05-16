@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-server/internal/constant"
+	"time"
 )
 
 // 上下文结构体
@@ -35,6 +36,7 @@ func ContextHandler(handler ContextHandlerFunc) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		var context = new(Context)
 		context.Context = ctx
+		context.ResponseBuilder.WithRequestStartTime(time.Now())
 		if authorization, ok := ctx.Keys["Authorization"]; ok {
 			context.Authorization = authorization.(string)
 		}
@@ -70,11 +72,15 @@ func (ctx *Context) handlerResponse() {
 
 	ctx.ResponseBuilder.WithMessage(ctx.ResponseBuilder.Message)
 
+	ctx.ResponseBuilder.WithRequestEndTime(time.Now())
+
+	ctx.ResponseBuilder.WithResponseTime(ctx.ResponseBuilder.GetRequestEndTime().Sub(ctx.ResponseBuilder.GetRequestStartTime()))
+
 	ctx.ResponseBuilder.Data = H{
 		"code":         ctx.ResponseBuilder.Code,
 		"message":      ctx.ResponseBuilder.Message,
 		"data":         ctx.ResponseBuilder.Data,
-		"responseTime": fmt.Sprintf("%s", ctx.ResponseBuilder.ResponseTime),
+		"responseTime": fmt.Sprintf("%s", ctx.ResponseBuilder.GetResponseTime()),
 	}
 
 	switch ctx.ResponseBuilder.Format {
