@@ -30,3 +30,17 @@ type VerifyTokenAuthResp struct {
 	Token     string    `json:"token"`
 	ExpiredAt time.Time `json:"expired_at"`
 }
+
+type RefreshTokenAuthReq struct {
+	Key    string `json:"key" form:"key" validate:"required" label:"颁布标识 Key"`
+	Secret string `json:"secret" form:"secret" validate:"required" label:"颁布标识 Secret"`
+	Token  string `json:"token" form:"token" validate:"required" label:"Token"`
+}
+
+type RefreshTokenAuthResp struct {
+	Key       string    `json:"key"`
+	Secret    string    `json:"secret"`
+	TTL       int       `json:"ttl"`
+	Token     string    `json:"token"`
+	ExpiredAt time.Time `json:"expired_at"`
+}

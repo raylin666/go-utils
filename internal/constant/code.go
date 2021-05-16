@@ -74,6 +74,7 @@ const (
 	StatusBsValidationHandleError 		= 10001
 	StatusParamsParseError				= 10002
 	StatusWriteDataError				= 10003
+	StatusDataSaveError					= 10004
 
 	// 鉴权服务
 	StatusAuthKeySecretNotFound			= 60001
@@ -155,6 +156,7 @@ var StatusText = map[int]string{
 	StatusBsValidationHandleError: 		 "Validation processing error",
 	StatusParamsParseError:				 "参数解析错误",
 	StatusWriteDataError:				 "写入数据失败",
+	StatusDataSaveError:				 "保存数据失败",
 
 	StatusAuthKeySecretNotFound:		 "颁布标识 Key Secret 不存在",
 	StatusAuthKeySecretExpire:			 "颁布标识 Key Secret 已过期",

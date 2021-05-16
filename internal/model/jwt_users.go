@@ -61,3 +61,17 @@ func (model *JwtUsersModel) Create(jwtUsers *JwtUsers) uint64 {
 
 	return jwtUsers.ID
 }
+
+// 刷新用户 Token 数据
+func (model *JwtUsersModel) RefreshToken(id uint64, jwtUsers *JwtUsers) uint64 {
+	result := model.Connection.Table(model.Table).Where("id = ?", id).Select("token", "ttl", "expired_at", "refresh_at").Updates(&jwtUsers)
+	if result.Error != nil {
+		logger.NewWrite(constant.LogSql).WithFields(logger.H{
+			"data": jwtUsers,
+			"err":  result.Error,
+		}.Fields()).Error("update data error")
+		return 0
+	}
+
+	return id
+}

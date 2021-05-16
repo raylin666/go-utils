@@ -47,7 +47,21 @@ func VerifyTokenAuth(ctx *context.Context)  {
 
 // 刷新 Token 认证
 func RefreshTokenAuth(ctx *context.Context)  {
+	var req params.RefreshTokenAuthReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		ctx.Error(constant.StatusParamsParseError)
+		return
+	}
 
+	if valid := ctx.RequestValidate(req); valid {
+		l := logic.NewAuthLogic(ctx)
+		resp, ok := l.RefreshTokenAuthLogic(req)
+		if !ok {
+			ctx.Error(ctx.ResponseBuilder.Code)
+		} else {
+			ctx.Success(resp)
+		}
+	}
 }
 
 
