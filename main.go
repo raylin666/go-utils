@@ -8,7 +8,6 @@ import (
 	"go-server/internal/api/router"
 	"go-server/internal/api/server"
 	"go-server/internal/environment"
-	"go-server/internal/model"
 	"go-server/pkg/cache"
 	"go-server/pkg/database"
 	"go-server/pkg/logger"
@@ -23,8 +22,6 @@ func init()  {
 	logger.InitLogger()
 	// 数据库初始化
 	database.InitDatabase()
-	// 初始化数据库模型
-	model.InitModel()
 	// 缓存初始化
 	cache.InitRedis()
 }

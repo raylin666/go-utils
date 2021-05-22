@@ -64,4 +64,23 @@ func RefreshTokenAuth(ctx *context.Context)  {
 	}
 }
 
+// 删除 Token 认证
+func DeleteTokenAuth(ctx *context.Context)  {
+	var req params.DeleteTokenAuthReq
+	if err := ctx.ShouldBind(&req); err != nil {
+		ctx.Error(constant.StatusParamsParseError)
+		return
+	}
+
+	if valid := ctx.RequestValidate(req); valid {
+		l := logic.NewAuthLogic(ctx)
+		resp, ok := l.DeleteTokenAuthLogic(req)
+		if !ok {
+			ctx.Error(ctx.ResponseBuilder.Code)
+		} else {
+			ctx.Success(resp)
+		}
+	}
+}
+
 

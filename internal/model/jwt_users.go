@@ -49,25 +49,41 @@ func (model *JwtUsersModel) GetTokenUser(token string, secret_id int) *JwtUsers 
 }
 
 // 创建用户数据
-func (model *JwtUsersModel) Create(jwtUsers *JwtUsers) uint64 {
-	result := model.Connection.Table(model.Table).Create(jwtUsers)
+func (model *JwtUsersModel) Create(jwt_users *JwtUsers) uint64 {
+	result := model.Connection.Table(model.Table).Create(jwt_users)
 	if result.Error != nil {
 		logger.NewWrite(constant.LogSql).WithFields(logger.H{
-			"data": jwtUsers,
+			"data": jwt_users,
 			"err":  result.Error,
 		}.Fields()).Error("create data error")
 		return 0
 	}
 
-	return jwtUsers.ID
+	return jwt_users.ID
 }
 
 // 刷新用户 Token 数据
-func (model *JwtUsersModel) RefreshToken(id uint64, jwtUsers *JwtUsers) uint64 {
-	result := model.Connection.Table(model.Table).Where("id = ?", id).Select("token", "ttl", "expired_at", "refresh_at").Updates(&jwtUsers)
+func (model *JwtUsersModel) RefreshToken(id uint64, jwt_users *JwtUsers) uint64 {
+	result := model.Connection.Table(model.Table).Where("id = ?", id).Select("token", "ttl", "expired_at", "refresh_at").Updates(&jwt_users)
 	if result.Error != nil {
 		logger.NewWrite(constant.LogSql).WithFields(logger.H{
-			"data": jwtUsers,
+			"data": jwt_users,
+			"err":  result.Error,
+		}.Fields()).Error("update data error")
+		return 0
+	}
+
+	return id
+}
+
+// 设置用户 Token 过期时间
+func (model *JwtUsersModel) SetExpireToken(id uint64, expire_at time.Time) uint64 {
+	var jwt_users JwtUsers
+	jwt_users.ExpiredAt = expire_at
+	result := model.Connection.Table(model.Table).Where("id = ?", id).Select( "expired_at").Updates(&jwt_users)
+	if result.Error != nil {
+		logger.NewWrite(constant.LogSql).WithFields(logger.H{
+			"data": jwt_users,
 			"err":  result.Error,
 		}.Fields()).Error("update data error")
 		return 0

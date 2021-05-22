@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"go-server/internal/constant"
+	"go-server/internal/model"
 	"time"
 )
 
@@ -16,6 +17,11 @@ type Context struct {
 
 	// 响应数据包内容
 	ResponseBuilder ResponseBuilder
+
+	Model struct {
+		JwtSecretModel *model.JwtSecretModel
+		JwtUsersModel  *model.JwtUsersModel
+	}
 }
 
 // 上下文处理函数
@@ -40,6 +46,10 @@ func ContextHandler(handler ContextHandlerFunc) gin.HandlerFunc {
 		if authorization, ok := ctx.Keys["Authorization"]; ok {
 			context.Authorization = authorization.(string)
 		}
+
+		context.Model.JwtSecretModel = model.NewJwtSecretModel()
+		context.Model.JwtUsersModel = model.NewJwtUsersModel()
+
 		handler(context)
 	}
 }
@@ -110,4 +120,3 @@ func (ctx *Context) builderResponseYAML() {
 func (ctx *Context) builderResponseJSONP() {
 	ctx.Context.JSONP(ctx.ResponseBuilder.HttpCode, ctx.ResponseBuilder.Data)
 }
-

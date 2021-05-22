@@ -12,6 +12,7 @@ func Router(router *gin.RouterGroup) *gin.RouterGroup {
 		router.POST("/token", context.ContextHandler(controller.GetTokenAuth))
 		router.POST("/token/verify", context.ContextHandler(controller.VerifyTokenAuth))
 		router.POST("/token/refresh", context.ContextHandler(controller.RefreshTokenAuth))
+		router.POST("/token/delete", context.ContextHandler(controller.DeleteTokenAuth))
 	}
 	return router
 }
