@@ -3,7 +3,7 @@ package logic
 import (
 	"go-server/config"
 	"go-server/internal/api/context"
-	"go-server/internal/api/http/api/v1/types/params"
+	"go-server/internal/api/http/auth/types/params"
 	"go-server/internal/constant"
 	"go-server/internal/model"
 	"go-server/pkg/jwt"

@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"go-server/config"
-	api_router "go-server/internal/api/http/api"
+	api_router "go-server/internal/api/http"
 	"go-server/internal/api/middleware"
 	"go-server/internal/api/router"
 	"go-server/internal/api/server"

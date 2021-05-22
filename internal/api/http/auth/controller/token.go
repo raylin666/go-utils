@@ -2,8 +2,8 @@ package controller
 
 import (
 	"go-server/internal/api/context"
-	"go-server/internal/api/http/api/v1/logic"
-	"go-server/internal/api/http/api/v1/types/params"
+	"go-server/internal/api/http/auth/logic"
+	"go-server/internal/api/http/auth/types/params"
 	"go-server/internal/constant"
 )
 
