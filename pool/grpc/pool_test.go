@@ -201,7 +201,7 @@ func TestPoolClose(t *testing.T) {
 	}
 }
 
-func TestContextCancelation(t *testing.T) {
+func TestContextCancellation(t *testing.T) {
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()
 
