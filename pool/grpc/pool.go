@@ -1,10 +1,10 @@
-package pool
+package grpcpool
 
 import (
+	"context"
 	"errors"
 	"sync"
 	"time"
-	"context"
 
 	"google.golang.org/grpc"
 )
@@ -30,9 +30,9 @@ type FactoryWithContext func(context.Context) (*grpc.ClientConn, error)
 
 // Pool is the grpc client pool
 type Pool struct {
-	clients         chan ClientConn
-	factory         FactoryWithContext
-	idleTimeout     time.Duration
+	clients     chan ClientConn
+	factory     FactoryWithContext
+	idleTimeout time.Duration
 	maxLifeDuration time.Duration
 	mu              sync.RWMutex
 }
