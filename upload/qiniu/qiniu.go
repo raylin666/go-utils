@@ -181,22 +181,22 @@ func (opt *Options) ChangeFileType(key string, fileType int) error {
 	return opt.GetBucketManager().ChangeType(opt.Bucket, key, fileType)
 }
 
-// FileMove 移动或重命名文件
+// Move 移动或重命名文件
 func (opt *Options) Move(destBucket string, srcKey string, destKey string, force bool) error {
 	return opt.GetBucketManager().Move(opt.Bucket, srcKey, destBucket, destKey, force)
 }
 
-// FileCopy 复制文件副本
+// Copy 复制文件副本
 func (opt *Options) Copy(destBucket string, srcKey string, destKey string, force bool) error {
 	return opt.GetBucketManager().Copy(opt.Bucket, srcKey, destBucket, destKey, force)
 }
 
-// FileDelete 删除空间中的文件
+// Delete 删除空间中的文件
 func (opt *Options) Delete(key string) error {
 	return opt.GetBucketManager().Delete(opt.Bucket, key)
 }
 
-// FileDeleteAfterDays 设置或更新文件的生存时间
+// DeleteAfterDays 设置或更新文件的生存时间
 func (opt *Options) DeleteAfterDays(key string, days int) error {
 	return opt.GetBucketManager().DeleteAfterDays(opt.Bucket, key, days)
 }
