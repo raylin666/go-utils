@@ -7,9 +7,9 @@ import (
 
 func initOptions() *Options {
 	return New(
-		"ph2rb2GYAJu94WzdZ0AB5uZFTK1GJSPCP0SAri9_",
-		"u0okNS0wLPwEILtOLUcfQRXiZY7l7TltINs38hmg",
-		"raylin666",
+		"ph2rb2GYAxxxxxxxZ0AB5uZFTK1GJSPCP0SAri9_",
+		"u0okNS0wLPwxxxxxxUcfQRXiZY7l7TltINs38hmg",
+		"xxxxxxxx",
 		"huanan",
 		&Config{},
 	)
@@ -18,7 +18,7 @@ func initOptions() *Options {
 // 下载文件 - 公开空间
 func TestMakePublicURL(t *testing.T) {
 	opts := initOptions()
-	url := opts.MakePublicURL("cdn.ls331.com", "micro/2021/0928/9f4ccfa9-44b2-4558-adcb-bc4780ec4716.jpe")
+	url := opts.MakePublicURL("cdn.xxx.com", "micro/2021/0928/9f4ccfa9-44b2-4558-adcb-bc4780ec4716.jpe")
 	fmt.Println(url)
 }
 
