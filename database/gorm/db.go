@@ -87,3 +87,12 @@ func New(opts Options, pgc PluginConfig) (*DB, error) {
 
 	return &DB{conn}, nil
 }
+
+func (db *DB) Close() error {
+	sqlDB, err := db.DB.DB()
+	if err != nil {
+		return err
+	}
+
+	return sqlDB.Close()
+}
