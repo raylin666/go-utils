@@ -9,6 +9,7 @@ require (
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.4 // indirect
 	github.com/qiniu/go-sdk/v7 v7.10.0
+	github.com/streadway/amqp v1.0.0 // indirect
 	google.golang.org/grpc v1.40.0
 	gopkg.in/alexcesaro/quotedprintable.v3 v3.0.0-20150716171945-2caba252f4dc // indirect
 	gopkg.in/gomail.v2 v2.0.0-20160411212932-81ebce5c23df // indirect
