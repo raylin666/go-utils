@@ -13,7 +13,7 @@ func conn() (*Client, error) {
 	opts.Addr = "127.0.0.1:6379"
 	opts.Password = "myredis"
 	opts.DB = 0
-	return New(opts)
+	return New(context.TODO(), opts)
 }
 
 func TestKeys(t *testing.T) {
