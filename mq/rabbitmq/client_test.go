@@ -6,12 +6,12 @@ import (
 	"testing"
 )
 
-func getClient() (*Client, error) {
+func get_client() (*Client, error) {
 	return New(&Options{})
 }
 
 func TestConnection(t *testing.T) {
-	client, err := getClient()
+	client, err := get_client()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -20,7 +20,7 @@ func TestConnection(t *testing.T) {
 }
 
 func TestPublishMessage(t *testing.T) {
-	client, err := getClient()
+	client, err := get_client()
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -46,7 +46,7 @@ func TestPublishMessage(t *testing.T) {
 }
 
 func TestConsumeMessage(t *testing.T) {
-	client, err := getClient()
+	client, err := get_client()
 	if err != nil {
 		t.Fatal(err)
 	}
