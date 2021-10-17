@@ -7,7 +7,11 @@ import (
 )
 
 func get_client() (*Client, error) {
-	return New(&Options{})
+	var config amqp.Config
+	config.Vhost = "test"
+	return New(&Options{
+		Config: config,
+	})
 }
 
 func TestConnection(t *testing.T) {
@@ -28,7 +32,7 @@ func TestPublishMessage(t *testing.T) {
 	data, err := json.Marshal(struct {
 		Name string
 	}{
-		Name: "linshan",
+		Name: "yangtiantian",
 	})
 
 	var published amqp.Publishing
@@ -51,20 +55,15 @@ func TestConsumeMessage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	delivery, err := client.ConsumerMessage(&Parameters{
+	err = client.ConsumerMessage(&Parameters{
 		ExchangeName: "test",
 		QueueName: "test:queue",
-	})
+	}, func(c *Client, ch *Channel, delivery amqp.Delivery) {
+		t.Log(string(delivery.Body))
+		// ch.Ack(delivery.DeliveryTag, false)
+	}, true)
 
 	if err != nil {
 		t.Fatal(err)
-	}
-
-	for d := range delivery {
-		t.Log(d)
-		t.Log(d.MessageId)
-		t.Log(d.ConsumerTag)
-		t.Log(d.MessageCount)
-		t.Log(d.Body)
 	}
 }

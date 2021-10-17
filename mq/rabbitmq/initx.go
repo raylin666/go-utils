@@ -47,6 +47,8 @@ type Options struct {
 	Password string
 	Host     string
 	Port     int
+
+	Config   amqp.Config
 }
 
 func New(opts *Options) (*Client, error) {
@@ -57,7 +59,7 @@ func New(opts *Options) (*Client, error) {
 		opts.Password,
 		opts.Host,
 		opts.Port)
-	conn, err := amqp.Dial(url)
+	conn, err := amqp.DialConfig(url, opts.Config)
 	if err != nil {
 		return nil, err
 	}
