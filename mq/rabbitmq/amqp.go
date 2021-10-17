@@ -40,6 +40,13 @@ type Parameters struct {
 	Mandatory    bool
 	// 套接字
 	Immediate    bool
+
+	// 消费者标识, 该字符串是唯一的，适用于该频道上的所有消费者
+	ConsumerId   string
+	// 是否自动确认消息
+	AutoAck		 bool
+	// 暂不支持 noLocal 标志
+	NoLocal		 bool
 }
 
 type Publishing struct {
@@ -112,7 +119,7 @@ func (ch *Channel) ExchangeDeclare(parameters *Parameters) error {
 	}
 
 	return ch.Channel.ExchangeDeclare(
-		parameters.QueueName,
+		parameters.ExchangeName,
 		parameters.ExchangeType,
 		parameters.Durable,
 		parameters.AutoDelete,
@@ -132,6 +139,17 @@ func (ch *Channel) Publish(parameters *Parameters, publishing Publishing) error 
 		parameters.Mandatory,
 		parameters.Immediate,
 		publishing.Publishing)
+}
+
+func (ch *Channel) Consume(parameters *Parameters) (<-chan amqp.Delivery, error) {
+	return ch.Channel.Consume(
+		parameters.QueueName,
+		parameters.ConsumerId,
+		parameters.AutoAck,
+		parameters.Exclusive,
+		parameters.NoLocal,
+		parameters.NoWait,
+		parameters.Args)
 }
 
 func (ch *Channel) Close() error {
@@ -164,8 +182,30 @@ func (c *Client) PublishMessage(parameters *Parameters, publishing Publishing) (
 	return &queue, ch.Publish(parameters, publishing)
 }
 
-func (c *Client) ConsumerMessage() {
+func (c *Client) ConsumerMessage(parameters *Parameters) (<-chan amqp.Delivery, error) {
+	ch, err := c.Channel()
+	if err != nil {
+		return nil, err
+	}
 
+	defer ch.Close()
+
+	_, err = ch.QueueDeclare(parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ch.ExchangeDeclare(parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	err = ch.QueueBind(parameters)
+	if err != nil {
+		return nil, err
+	}
+
+	return ch.Consume(parameters)
 }
 
 func (c *Client) Close() error {
