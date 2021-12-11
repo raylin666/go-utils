@@ -3,11 +3,11 @@ package validator
 import "testing"
 
 func TestValidate(t *testing.T) {
-	valid := New("zh")
+	valid := New("zh", "label")
 	s := valid.Validate(struct {
 		Name string `label:"name" validate:"required,min=6"`
 	}{
-		Name: "cc",
+		Name: "raylin666",
 	})
 
 	if len(s) > 0 {

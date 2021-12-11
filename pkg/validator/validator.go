@@ -6,9 +6,9 @@ import (
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
-	"reflect"
-	zh_translations "github.com/go-playground/validator/v10/translations/zh"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
+	zh_translations "github.com/go-playground/validator/v10/translations/zh"
+	"reflect"
 )
 
 type Options struct {
@@ -22,7 +22,7 @@ type Validator struct {
 	Valid *validator.Validate
 }
 
-func New(locale string) *Validator {
+func New(locale string, tagname string) *Validator {
 	var translator locales.Translator
 	switch locale {
 	case "en":
@@ -39,9 +39,9 @@ func New(locale string) *Validator {
 	// 注册验证器
 	valid := validator.New()
 
-	// 注册一个函数，获取struct tag里自定义的label作为字段名
+	// 注册一个函数，获取struct tag里自定义的字段名
 	valid.RegisterTagNameFunc(func(fld reflect.StructField) string {
-		name := fld.Tag.Get("label")
+		name := fld.Tag.Get(tagname)
 		return name
 	})
 
