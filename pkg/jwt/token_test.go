@@ -13,7 +13,7 @@ const (
 
 func TestGenerateToken(t *testing.T) {
 	token := New(app, key, secret)
-	var duration time.Duration = 86400000000
+	var duration = 86400 * time.Second
 	tokenString, err := token.GenerateToken("153662", duration)
 	if err != nil {
 		t.Fatal(err)
@@ -24,7 +24,7 @@ func TestGenerateToken(t *testing.T) {
 
 func TestParseToken(t *testing.T) {
 	token := New(app, key, secret)
-	claims, err := token.ParseToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiIxNTM2NjIiLCJleHAiOjE2MzM2NjQ1MjksImlhdCI6MTYzMzY2NDQ0MiwiaXNzIjoiMTgyMzczNjQzOTgyNzg2IiwibmJmIjoxNjMzNjY0NDQyLCJzdWIiOiJtYWNvcyJ9._B8WHbxXB6AtuqkBOvwEeFPSV3j9LuaMgiLVCgRQqbY")
+	claims, err := token.ParseToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTUzNjYyIiwiaXNzIjoiMTgyMzczNjQzOTgyNzg2Iiwic3ViIjoibWFjb3MiLCJleHAiOjE2NDcxNDc1NjMsIm5iZiI6MTY0NzA2MTE2MywiaWF0IjoxNjQ3MDYxMTYzfQ.7ksobgZHI2FB9dQT5Zk9b2tfdnuAuA_Odx-SnRiXNe4")
 	if err != nil {
 		t.Fatal(err)
 	}

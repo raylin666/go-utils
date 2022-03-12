@@ -1,7 +1,8 @@
 package jwt
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt/v4"
+	"github.com/raylin666/go-utils/pkg/errors"
 	"time"
 )
 
@@ -21,8 +22,8 @@ type token struct {
 }
 
 type claims struct {
-	UserID string
-	jwt.StandardClaims
+	UserID string `json:"user_id"`
+	jwt.RegisteredClaims
 }
 
 func New(app string, key string, secret string) Token {
@@ -46,11 +47,11 @@ func (t *token) GenerateToken(userId string, expireDuration time.Duration) (toke
 
 	claims := claims{
 		userId,
-		jwt.StandardClaims{
+		jwt.RegisteredClaims{
 			Issuer:    t.key,
-			NotBefore: time.Now().Unix(),
-			IssuedAt:  time.Now().Unix(),
-			ExpiresAt: time.Now().Add(expireDuration).Unix(),
+			NotBefore: jwt.NewNumericDate(time.Now()),
+			IssuedAt:  jwt.NewNumericDate(time.Now()),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expireDuration)),
 			Subject:   t.app,
 		},
 	}
@@ -63,6 +64,20 @@ func (t *token) ParseToken(tokenString string) (*claims, error) {
 	tokenClaims, err := jwt.ParseWithClaims(tokenString, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(t.secret), nil
 	})
+
+	if err != nil {
+		if valid, ok := err.(*jwt.ValidationError); ok {
+			if valid.Errors&jwt.ValidationErrorMalformed != 0 {
+				return nil, errors.New("that's not even a token")
+			} else if valid.Errors&jwt.ValidationErrorExpired != 0 {
+				return nil, errors.New("token is expired")
+			} else if valid.Errors&jwt.ValidationErrorNotValidYet != 0 {
+				return nil, errors.New("token not active yet")
+			} else {
+				return nil, errors.New("couldn't handle this token")
+			}
+		}
+	}
 
 	if tokenClaims != nil {
 		if claims, ok := tokenClaims.Claims.(*claims); ok && tokenClaims.Valid {

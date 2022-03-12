@@ -3,11 +3,11 @@ module github.com/raylin666/go-utils
 go 1.17
 
 require (
-	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/go-playground/locales v0.14.0
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.9.0
 	github.com/go-redis/redis/v8 v8.11.4
+	github.com/golang-jwt/jwt/v4 v4.3.0
 	github.com/pkg/errors v0.8.1
 	github.com/qiniu/go-sdk/v7 v7.11.1
 	go.uber.org/zap v1.21.0
