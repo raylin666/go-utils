@@ -10,7 +10,7 @@ var _ Token = (*token)(nil)
 
 type Token interface {
 	// 生成 Token
-	GenerateToken(userId string, expireDuration time.Duration) (tokenString string, err error)
+	GenerateToken(userId string, expireDuration time.Duration, opt ClaimsOptions) (tokenString string, err error)
 	// 解析 Token
 	ParseToken(tokenString string) (*claims, error)
 }
@@ -34,8 +34,13 @@ func New(app string, key string, secret string) Token {
 	}
 }
 
+type ClaimsOptions struct {
+	ID       string
+	Audience jwt.ClaimStrings
+}
+
 // 生成 TOKEN 签名
-func (t *token) GenerateToken(userId string, expireDuration time.Duration) (tokenString string, err error) {
+func (t *token) GenerateToken(userId string, expireDuration time.Duration, opt ClaimsOptions) (tokenString string, err error) {
 	// The token content.
 	// iss: （Issuer）签发者
 	// iat: （Issued At）签发时间，用Unix时间戳表示
@@ -45,16 +50,23 @@ func (t *token) GenerateToken(userId string, expireDuration time.Duration) (toke
 	// nbf: （Not Before）不要早于这个时间
 	// jti: （JWT ID）用于标识JWT的唯一ID
 
-	claims := claims{
-		userId,
-		jwt.RegisteredClaims{
-			Issuer:    t.key,
-			NotBefore: jwt.NewNumericDate(time.Now()),
-			IssuedAt:  jwt.NewNumericDate(time.Now()),
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(expireDuration)),
-			Subject:   t.app,
-		},
+	var registeredClaims = jwt.RegisteredClaims{
+		Issuer:    t.key,
+		Subject:   t.app,
+		NotBefore: jwt.NewNumericDate(time.Now()),
+		IssuedAt:  jwt.NewNumericDate(time.Now()),
+		ExpiresAt: jwt.NewNumericDate(time.Now().Add(expireDuration)),
 	}
+
+	if opt.ID != "" {
+		registeredClaims.ID = opt.ID
+	}
+
+	if opt.Audience != nil {
+		registeredClaims.Audience = opt.Audience
+	}
+
+	claims := claims{userId, registeredClaims}
 	tokenString, err = jwt.NewWithClaims(jwt.SigningMethodHS256, claims).SignedString([]byte(t.secret))
 	return
 }
