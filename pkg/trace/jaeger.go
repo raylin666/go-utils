@@ -1,7 +1,6 @@
 package trace
 
 import (
-	"context"
 	"go.opentelemetry.io/otel/attribute"
 	oteljaeger "go.opentelemetry.io/otel/exporters/jaeger"
 	sdktrace "go.opentelemetry.io/otel/sdk/trace"
@@ -54,10 +53,6 @@ func NewJaeger(endpointOption oteljaeger.EndpointOption, opts ...JaegerOption) (
 
 func (j *jaeger) GetTracerProvider() *sdktrace.TracerProvider {
 	return j.TracerProvider
-}
-
-func (j *jaeger) Shutdown(ctx context.Context) error {
-	return j.TracerProvider.Shutdown(ctx)
 }
 
 type JaegerOption func(*jaegerOption)

@@ -1,7 +1,6 @@
 package trace
 
 import (
-	"context"
 	"go.opentelemetry.io/otel"
 	"go.opentelemetry.io/otel/attribute"
 	"go.opentelemetry.io/otel/sdk/resource"
@@ -9,11 +8,10 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 )
 
-const TracerName = "github.com/raylin666/go-utils/pkg/trace"
+const TracePackageName = "github.com/raylin666/go-utils/pkg/trace"
 
 type Trace interface {
 	GetTracerProvider() *tracesdk.TracerProvider
-	Shutdown(ctx context.Context) error
 }
 
 func provider(exporter tracesdk.SpanExporter, attrs ...attribute.KeyValue) *tracesdk.TracerProvider {
