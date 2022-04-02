@@ -10,8 +10,6 @@
 
 `dingtalk` 钉钉组件
 
-`env` 环境相关组件
-
 `errors` 错误处理组件
 
 `httpclient` HTTP 客户端组件
