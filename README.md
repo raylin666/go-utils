@@ -2,6 +2,8 @@
 
 <hr />
 
+`auth` 鉴权认证组件
+
 `cache`  缓存组件
 
 `db` 数据库组件
@@ -13,8 +15,6 @@
 `errors` 错误处理组件
 
 `httpclient` HTTP 客户端组件
-
-`jwt` JWT 鉴权认证组件
 
 `logger` 日志组件
 
