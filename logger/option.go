@@ -72,7 +72,7 @@ func WithPathFile(file string) Option {
 	}
 }
 
-type LumberjackOption struct {
+type PathFileRotationOption struct {
 	MaxSize    int
 	MaxBackups int
 	MaxAge     int
@@ -81,20 +81,19 @@ type LumberjackOption struct {
 }
 
 // WithPathFileRotation write log to some file with rotation
-func WithPathFileRotation(file string, ljkopt LumberjackOption) Option {
+func WithPathFileRotation(file string, pfopt PathFileRotationOption) Option {
 	dir := filepath.Dir(file)
 	if err := os.MkdirAll(dir, 0766); err != nil {
 		panic(err)
 	}
-
 	return func(opt *option) {
 		opt.file = &lumberjack.Logger{ // concurrent-safed
 			Filename:   file,              // 文件路径
-			MaxSize:    ljkopt.MaxSize,    // 单个文件最大尺寸，默认单位 M
-			MaxBackups: ljkopt.MaxBackups, // 最多保留 300 个备份
-			MaxAge:     ljkopt.MaxAge,     // 最大时间，默认单位 day
-			LocalTime:  ljkopt.LocalTime,  // 使用本地时间
-			Compress:   ljkopt.Compress,   // 是否压缩 disabled by default
+			MaxSize:    pfopt.MaxSize,    // 单个文件最大尺寸，默认单位 M
+			MaxBackups: pfopt.MaxBackups, // 最多保留 300 个备份
+			MaxAge:     pfopt.MaxAge,     // 最大时间，默认单位 day
+			LocalTime:  pfopt.LocalTime,  // 使用本地时间
+			Compress:   pfopt.Compress,   // 是否压缩 disabled by default
 		}
 	}
 }
