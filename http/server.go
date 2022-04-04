@@ -4,11 +4,9 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"github.com/gorilla/mux"
+	ut "github.com/raylin666/go-utils"
 	"github.com/raylin666/go-utils/middleware"
 	"github.com/raylin666/go-utils/server"
-	"github.com/raylin666/go-utils/server/encoder"
-	"github.com/raylin666/go-utils/server/protocol"
 	"net"
 	"net/http"
 	"net/url"
@@ -56,38 +54,10 @@ func WithServerTLSConfig(c *tls.Config) ServerOption {
 	}
 }
 
-// WithServerMiddleware with service middleware option.
-func WithServerMiddleware(m ...middleware.Middleware) ServerOption {
-	return func(o *Server) {
-		o.middlewares = m
-	}
-}
-
 // WithServerHTTPMiddlewares with HTTP middleware option.
-func WithServerHTTPMiddlewares(middlewares ...HTTPMiddlewareHandler) ServerOption {
+func WithServerHTTPMiddlewares(middlewares ...middleware.HTTPHandler) ServerOption {
 	return func(o *Server) {
 		o.httpMiddlewares = middlewares
-	}
-}
-
-// WithServerRequestDecoder with request decoder.
-func WithServerRequestDecoder(dec encoder.DecodeRequestFunc) ServerOption {
-	return func(o *Server) {
-		o.dec = dec
-	}
-}
-
-// WithServerResponseEncoder with response encoder.
-func WithServerResponseEncoder(en encoder.EncodeResponseFunc) ServerOption {
-	return func(o *Server) {
-		o.enc = en
-	}
-}
-
-// WithServerErrorEncoder with error encoder.
-func WithServerErrorEncoder(en encoder.EncodeErrorFunc) ServerOption {
-	return func(o *Server) {
-		o.ene = en
 	}
 }
 
@@ -102,12 +72,12 @@ type Server struct {
 	lis             net.Listener
 	endpoint        *url.URL
 	tlsConf         *tls.Config
-	middlewares     []middleware.Middleware
-	httpMiddlewares []HTTPMiddlewareHandler
-	router          *mux.Router
-	dec             encoder.DecodeRequestFunc
-	enc             encoder.EncodeResponseFunc
-	ene             encoder.EncodeErrorFunc
+	httpMiddlewares []middleware.HTTPHandler
+	router 			Router
+}
+
+func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	s.router.ServeHTTP(writer, request)
 }
 
 func NewServer(opts ...ServerOption) *Server {
@@ -121,17 +91,16 @@ func NewServer(opts ...ServerOption) *Server {
 	}
 
 	srv.Server = &http.Server{
-		Handler:   HTTPMiddlewareFilterChain(srv.httpMiddlewares...)(srv),
+		Handler:   middleware.HTTPChain(srv.httpMiddlewares...)(srv),
 		TLSConfig: srv.tlsConf,
 	}
 
-	srv.router = mux.NewRouter()
-	srv.router.Use(srv.middleware())
 	return srv
 }
 
-func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	s.router.ServeHTTP(writer, request)
+// WithRouter 注册路由, 这里只提供路由接口, 可以接入 gin/mux 等路由器
+func (s *Server) WithRouter(r Router) {
+	s.router = r
 }
 
 // Endpoint return a real address to registry endpoint.
@@ -147,7 +116,7 @@ func (s *Server) Endpoint() (*url.URL, error) {
 			s.err = err
 			return
 		}
-		addr, err := protocol.ExtractAddress(s.address, lis)
+		addr, err := ut.ExtractAddress(s.address, lis)
 		if err != nil {
 			lis.Close()
 			s.err = err
@@ -161,33 +130,6 @@ func (s *Server) Endpoint() (*url.URL, error) {
 		return nil, s.err
 	}
 	return s.endpoint, nil
-}
-
-func (s *Server) middleware() mux.MiddlewareFunc {
-	return func(next http.Handler) http.Handler {
-		return http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
-			ctx, cancel := context.WithCancel(req.Context())
-			defer cancel()
-			if s.timeout > 0 {
-				ctx, cancel = context.WithTimeout(ctx, s.timeout)
-				defer cancel()
-			}
-			pathTemplate := req.URL.Path
-			if route := mux.CurrentRoute(req); route != nil {
-				// /path/123 -> /path/{id}
-				pathTemplate, _ = route.GetPathTemplate()
-			}
-			var trans = new(server.Transport)
-			trans.Option.Endpoint = s.endpoint.String()
-			trans.Option.Operation = pathTemplate
-			trans.Option.ReqHeader = server.HeaderCarrier(req.Header)
-			trans.Option.ReplyHeader = server.HeaderCarrier(w.Header())
-			trans.Option.Request = req
-			trans.Option.PathTemplate = pathTemplate
-			ctx = server.NewServerContext(ctx, trans)
-			next.ServeHTTP(w, req.WithContext(ctx))
-		})
-	}
 }
 
 func (s *Server) Start(ctx context.Context) error {
