@@ -73,18 +73,15 @@ type Server struct {
 	endpoint        *url.URL
 	tlsConf         *tls.Config
 	httpMiddlewares []middleware.HTTPHandler
-	router 			Router
+	router          Router
 }
 
-func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	s.router.ServeHTTP(writer, request)
-}
-
-func NewServer(opts ...ServerOption) *Server {
+func NewServer(router Router, opts ...ServerOption) *Server {
 	var srv = &Server{
 		network: "tcp",
 		address: ":0",
 		timeout: 1 * time.Second,
+		router:  router,
 	}
 	for _, opt := range opts {
 		opt(srv)
@@ -98,9 +95,8 @@ func NewServer(opts ...ServerOption) *Server {
 	return srv
 }
 
-// WithRouter 注册路由, 这里只提供路由接口, 可以接入 gin/mux 等路由器
-func (s *Server) WithRouter(r Router) {
-	s.router = r
+func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
+	s.router.ServeHTTP(writer, request)
 }
 
 // Endpoint return a real address to registry endpoint.
