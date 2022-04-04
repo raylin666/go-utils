@@ -1,4 +1,4 @@
-package utils
+package ut
 
 import (
 	"errors"
@@ -19,4 +19,9 @@ func LoadYml(path string, out interface{}) error {
 		return errors.New("Cannot resolve [" + path + "] -- " + err.Error())
 	}
 	return nil
+}
+
+func LoadYmlByString(yamlStr string, out interface{}) error {
+	// yaml解析
+	return yaml.Unmarshal([]byte(yamlStr), out)
 }

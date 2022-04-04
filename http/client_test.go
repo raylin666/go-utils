@@ -1,4 +1,4 @@
-package httpclient
+package http
 
 import (
 	"io/ioutil"
@@ -9,8 +9,8 @@ import (
 
 func TestClient(t *testing.T) {
 	client := NewClient(
-		WithHTTPTimeout(3 * time.Second),
-		WithRetryCount(3))
+		WithClientHTTPTimeout(3 * time.Second),
+		WithClientRetryCount(3))
 	resp, err := client.GET("http://baidu.com", http.Header{})
 	if err != nil {
 		t.Fatal(err)

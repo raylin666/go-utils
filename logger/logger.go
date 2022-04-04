@@ -18,18 +18,14 @@ const (
 
 // NewJSONLogger return a json-encoder zap logger,
 func NewJSONLogger(opts ...Option) (*zap.Logger, error) {
-	opt := &option{level: DefaultLevel, fields: make(map[string]string)}
+	opt := &option{
+		level: DefaultLevel,
+		fields: make(map[string]string),
+		levelEncoder: zapcore.LowercaseLevelEncoder,
+		timeLayout: DefaultTimeLayout,
+	}
 	for _, f := range opts {
 		f(opt)
-	}
-
-	timeLayout := DefaultTimeLayout
-	if opt.timeLayout != "" {
-		timeLayout = opt.timeLayout
-	}
-
-	if opt.levelEncoder == nil {
-		opt.levelEncoder = zapcore.LowercaseLevelEncoder
 	}
 
 	// similar to zap.NewProductionEncoderConfig()
@@ -43,7 +39,7 @@ func NewJSONLogger(opts ...Option) (*zap.Logger, error) {
 		LineEnding:    zapcore.DefaultLineEnding,
 		EncodeLevel:   opt.levelEncoder, // 编码器
 		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
-			enc.AppendString(t.Format(timeLayout))
+			enc.AppendString(t.Format(opt.timeLayout))
 		},
 		EncodeDuration: zapcore.MillisDurationEncoder,
 		EncodeCaller:   zapcore.ShortCallerEncoder, // 全路径编码器

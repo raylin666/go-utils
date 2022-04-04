@@ -40,26 +40,21 @@ func WithCSTLayout(cst string) Option {
 }
 
 func NewDatetime(opts ...Option) *Datetime {
-	var (
-		err error
-		o = new(option)
-	)
+	var err error
+	var o = &option{
+		location:  Location,
+		cstLayout: CSTLayout,
+	}
 
 	for _, opt := range opts {
 		opt(o)
-	}
-	if o.location == "" {
-		o.location = Location
-	}
-	if o.cstLayout == "" {
-		o.cstLayout = CSTLayout
 	}
 
 	var datetime = new(Datetime)
 	datetime.option = o
 	cst, err = time.LoadLocation(o.location)
 	if err != nil {
-		time.Local = cst	// 设置时区
+		time.Local = cst // 设置时区
 	}
 
 	return datetime

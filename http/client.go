@@ -1,4 +1,4 @@
-package httpclient
+package http
 
 import (
 	"github.com/gojek/heimdall/v7"
@@ -19,33 +19,33 @@ type Client interface {
 	DELETE(url string, headers http.Header) (*http.Response, error)
 }
 
-type Options httpclient.Option
+type ClientOptions httpclient.Option
 
-// WithHTTPTimeout 设置超时时间
-func WithHTTPTimeout(timeout time.Duration) Options {
-	return Options(httpclient.WithHTTPTimeout(timeout))
+// WithClientHTTPTimeout 设置超时时间
+func WithClientHTTPTimeout(timeout time.Duration) ClientOptions {
+	return ClientOptions(httpclient.WithHTTPTimeout(timeout))
 }
 
-// WithRetryCount 设置重试次数
-func WithRetryCount(retryCount int) Options {
-	return Options(httpclient.WithRetryCount(retryCount))
+// WithClientRetryCount 设置重试次数
+func WithClientRetryCount(retryCount int) ClientOptions {
+	return ClientOptions(httpclient.WithRetryCount(retryCount))
 }
 
-// WithRetrier 设置重试策略
-func WithRetrier(retrier heimdall.Retriable) Options {
-	return Options(httpclient.WithRetrier(retrier))
+// WithClientRetrier 设置重试策略
+func WithClientRetrier(retrier heimdall.Retriable) ClientOptions {
+	return ClientOptions(httpclient.WithRetrier(retrier))
 }
 
 // WithHTTPClient 设置自定义HTTP客户端
-func WithHTTPClient(client heimdall.Doer) Options {
-	return Options(httpclient.WithHTTPClient(client))
+func WithHTTPClient(client heimdall.Doer) ClientOptions {
+	return ClientOptions(httpclient.WithHTTPClient(client))
 }
 
 type client struct {
 	client *httpclient.Client
 }
 
-func NewClient(opts ...Options) Client {
+func NewClient(opts ...ClientOptions) Client {
 	var c = new(client)
 	var o []httpclient.Option
 	for _, v := range opts {

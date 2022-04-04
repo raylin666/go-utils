@@ -3,10 +3,28 @@ package rpc
 import (
 	"context"
 	"google.golang.org/grpc"
-	"google.golang.org/grpc/credentials/insecure"
-	"net"
 )
 
+type GRPCServerOption func(*GRPCServer)
+
+type GRPCServer struct {
+	*grpc.Server
+}
+
+func NewGRPCServer(opts ...GRPCServerOption) *GRPCServer {
+	var srv = new(GRPCServer)
+	return srv
+}
+
+func (s *GRPCServer) Start(ctx context.Context) error {
+	panic("implement me")
+}
+
+func (s *GRPCServer) Stop(ctx context.Context) error {
+	panic("implement me")
+}
+
+/*
 var _ GrpcServer = (*grpcServer)(nil)
 
 type GrpcServer interface {
@@ -66,4 +84,4 @@ func (s *grpcServer) Serve(lis net.Listener) error {
 
 func (s *grpcServer) Stop() {
 	s.Server.Stop()
-}
+}*/

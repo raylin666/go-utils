@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/raylin666/go-utils/httpclient"
+	httpclient "github.com/raylin666/go-utils/http"
 	"net/http"
 )
 
@@ -29,7 +29,7 @@ type robot struct {
 	client      httpclient.Client
 }
 
-func NewRobot(accessToken string, opts ...httpclient.Options) Robot {
+func NewRobot(accessToken string, opts ...httpclient.ClientOptions) Robot {
 	var r = new(robot)
 	r.accessToken = accessToken
 	r.api = fmt.Sprintf("%s/robot/send?access_token=%s", apiUrl, accessToken)

@@ -18,48 +18,39 @@ type Validator interface {
 }
 
 type validator struct {
-	*option
-	validate *govalidator.Validate
-
+	locale     string
+	tagname    string
+	validate   *govalidator.Validate
 	translator ut.Translator
 }
 
-type Option func(opt *option)
-
-type option struct {
-	locale  string
-	tagname string
-}
+type Option func(*validator)
 
 func WithLocale(locale string) Option {
-	return func(opt *option) {
-		opt.locale = locale
+	return func(v *validator) {
+		v.locale = locale
 	}
 }
 
 func WithTagname(tagname string) Option {
-	return func(opt *option) {
-		opt.tagname = tagname
+	return func(v *validator) {
+		v.tagname = tagname
 	}
 }
 
 func New(opts ...Option) Validator {
-	var v = new(validator)
-	var o = new(option)
+	var v = &validator{
+		locale:  "en",
+		tagname: "label",
+	}
 	for _, opt := range opts {
-		opt(o)
-	}
-	if o.locale == "" {
-		o.locale = "en"
-	}
-	if o.tagname == "" {
-		o.tagname = "label"
+		opt(v)
 	}
 
 	// 注册翻译器
 	var registerTranslatorFn = func(translator locales.Translator) ut.Translator {
 		uni := ut.New(translator)
-		trans, _ := uni.GetTranslator(o.locale)
+		trans, _ := uni.GetTranslator(v.locale)
 		return trans
 	}
 
@@ -67,12 +58,12 @@ func New(opts ...Option) Validator {
 	var validate = govalidator.New()
 	// 注册一个函数，获取 struct tag 里自定义的字段名
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
-		name := fld.Tag.Get(o.tagname)
+		name := fld.Tag.Get(v.tagname)
 		return name
 	})
 
 	var trans ut.Translator
-	switch o.locale {
+	switch v.locale {
 	case "zh":
 		translator := zh.New()
 		trans = registerTranslatorFn(translator)
@@ -86,7 +77,6 @@ func New(opts ...Option) Validator {
 		_ = en_translations.RegisterDefaultTranslations(validate, trans)
 	}
 
-	v.option = o
 	v.translator = trans
 	v.validate = validate
 	return v

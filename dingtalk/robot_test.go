@@ -1,14 +1,14 @@
 package dingtalk
 
 import (
-	"github.com/raylin666/go-utils/httpclient"
+	httpclient "github.com/raylin666/go-utils/http"
 	"io/ioutil"
 	"testing"
 	"time"
 )
 
 func TestRobotSendTextMessage(t *testing.T) {
-	var rb = NewRobot("1if7D3f8D", httpclient.WithHTTPTimeout(3*time.Second))
+	var rb = NewRobot("1if7D3f8D", httpclient.WithClientHTTPTimeout(3*time.Second))
 	var message = RobotTextMessageType{}
 	message.At.AtMobiles = []string{"xxxxxx"}
 	message.Text.Content = "测试通知"
