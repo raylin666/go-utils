@@ -5,13 +5,11 @@ import (
 	"crypto/tls"
 	"errors"
 	ut "github.com/raylin666/go-utils"
-	"github.com/raylin666/go-utils/middleware"
 	"github.com/raylin666/go-utils/server"
 	"net"
 	"net/http"
 	"net/url"
 	"sync"
-	"time"
 )
 
 var _ server.Server = (*Server)(nil)
@@ -33,13 +31,6 @@ func WithServerAddress(addr string) ServerOption {
 	}
 }
 
-// WithServerTimeout with server timeout.
-func WithServerTimeout(timeout time.Duration) ServerOption {
-	return func(s *Server) {
-		s.timeout = timeout
-	}
-}
-
 // WithServerEndpoint with server endpoint.
 func WithServerEndpoint(endpoint *url.URL) ServerOption {
 	return func(o *Server) {
@@ -54,13 +45,6 @@ func WithServerTLSConfig(c *tls.Config) ServerOption {
 	}
 }
 
-// WithServerHTTPMiddlewares with HTTP middleware option.
-func WithServerHTTPMiddlewares(middlewares ...middleware.HTTPHandler) ServerOption {
-	return func(o *Server) {
-		o.httpMiddlewares = middlewares
-	}
-}
-
 type Server struct {
 	*http.Server
 
@@ -68,35 +52,25 @@ type Server struct {
 	err             error
 	network         string
 	address         string
-	timeout         time.Duration
 	lis             net.Listener
 	endpoint        *url.URL
 	tlsConf         *tls.Config
-	httpMiddlewares []middleware.HTTPHandler
-	router          Router
 }
 
-func NewServer(router Router, opts ...ServerOption) *Server {
+func NewServer(hs *http.Server, opts ...ServerOption) *Server {
 	var srv = &Server{
 		network: "tcp",
 		address: ":0",
-		timeout: 1 * time.Second,
-		router:  router,
 	}
 	for _, opt := range opts {
 		opt(srv)
 	}
 
-	srv.Server = &http.Server{
-		Handler:   middleware.HTTPChain(srv.httpMiddlewares...)(srv),
-		TLSConfig: srv.tlsConf,
+	if hs.TLSConfig == nil {
+		hs.TLSConfig = srv.tlsConf
 	}
-
+	srv.Server = hs
 	return srv
-}
-
-func (s *Server) ServeHTTP(writer http.ResponseWriter, request *http.Request) {
-	s.router.ServeHTTP(writer, request)
 }
 
 // Endpoint return a real address to registry endpoint.
