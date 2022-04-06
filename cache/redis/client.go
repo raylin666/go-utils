@@ -10,6 +10,7 @@ import (
 var _ Client = (*client)(nil)
 
 type Client interface {
+	Close() error
 	Ping() *cmd.StatusCmd
 	Command() *cmd.CommandsInfoCmd
 	ClientGetName() *cmd.StringCmd
@@ -267,6 +268,10 @@ func NewClient(ctx context.Context, opt *Options) (Client, error) {
 	}
 
 	return c, nil
+}
+
+func (c *client) Close() error {
+	return c.client.Close()
 }
 
 func (c *client) Ping() *cmd.StatusCmd {

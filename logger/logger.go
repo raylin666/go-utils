@@ -14,15 +14,24 @@ const (
 
 	// DefaultTimeLayout the default time layout;
 	DefaultTimeLayout = time.RFC3339
+
+	AppKey         = "app"
+	EnvironmentKey = "environment"
+	TimeKey        = "time"
+	LevelKey       = "level"
+	NameKey        = "name"
+	CallerKey      = "caller"
+	MessageKey     = "message"
+	StacktraceKey  = "stacktrace"
 )
 
 // NewJSONLogger return a json-encoder zap logger,
 func NewJSONLogger(opts ...Option) (*zap.Logger, error) {
 	opt := &option{
-		level: DefaultLevel,
-		fields: make(map[string]string),
+		level:        DefaultLevel,
+		fields:       make(map[string]string),
 		levelEncoder: zapcore.LowercaseLevelEncoder,
-		timeLayout: DefaultTimeLayout,
+		timeLayout:   DefaultTimeLayout,
 	}
 	for _, f := range opts {
 		f(opt)
@@ -30,12 +39,12 @@ func NewJSONLogger(opts ...Option) (*zap.Logger, error) {
 
 	// similar to zap.NewProductionEncoderConfig()
 	encoderConfig := zapcore.EncoderConfig{
-		TimeKey:       "time",
-		LevelKey:      "level",
-		NameKey:       "name", // used by logger.Named(key); optional; useless
-		CallerKey:     "caller",
-		MessageKey:    "message",
-		StacktraceKey: "stacktrace", // use by zap.AddStacktrace; optional; useless
+		TimeKey:       TimeKey,
+		LevelKey:      LevelKey,
+		NameKey:       NameKey, // used by logger.Named(key); optional; useless
+		CallerKey:     CallerKey,
+		MessageKey:    MessageKey,
+		StacktraceKey: StacktraceKey, // use by zap.AddStacktrace; optional; useless
 		LineEnding:    zapcore.DefaultLineEnding,
 		EncodeLevel:   opt.levelEncoder, // 编码器
 		EncodeTime: func(t time.Time, enc zapcore.PrimitiveArrayEncoder) {
@@ -97,4 +106,3 @@ func NewJSONLogger(opts ...Option) (*zap.Logger, error) {
 
 	return logger, nil
 }
-

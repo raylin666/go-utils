@@ -60,6 +60,14 @@ func NewDatetime(opts ...Option) *Datetime {
 	return datetime
 }
 
+func (t *Datetime) Location() string {
+	return t.location
+}
+
+func (t *Datetime) CSTLayout() string {
+	return t.cstLayout
+}
+
 // RFC3339ToCSTLayout convert rfc3339 value to China standard time layout
 // 2020-11-08T08:18:46+08:00 => 2020-11-08 08:18:46
 func (t *Datetime) RFC3339ToCSTLayout(value string) (string, error) {

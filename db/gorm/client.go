@@ -1,6 +1,7 @@
 package gorm
 
 import (
+	"database/sql"
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -13,12 +14,14 @@ var _ Client = (*client)(nil)
 type Client interface {
 	Options() *option
 	DB() *gorm.DB
+	SqlDB() *sql.DB
 	WithPluginBeforeHandler(before func(db *gorm.DB), after func(db *gorm.DB, sql string, ts time.Time)) error
 }
 
 type client struct {
 	*option
-	db *gorm.DB
+	db    *gorm.DB
+	sqlDb *sql.DB
 }
 
 func NewClient(opts ...Option) (Client, error) {
@@ -66,6 +69,7 @@ func NewClient(opts ...Option) (Client, error) {
 	sqlDb.SetConnMaxLifetime(time.Minute * o.MaxLifeTime)
 
 	c.db = conn
+	c.sqlDb = sqlDb
 	return c, nil
 }
 
@@ -75,6 +79,10 @@ func (c *client) Options() *option {
 
 func (c *client) DB() *gorm.DB {
 	return c.db
+}
+
+func (c *client) SqlDB() *sql.DB {
+	return c.sqlDb
 }
 
 func (c *client) WithPluginBeforeHandler(before func(db *gorm.DB), after func(db *gorm.DB, sql string, ts time.Time)) error {

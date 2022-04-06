@@ -60,7 +60,6 @@ type Server struct {
 func NewServer(hs *http.Server, opts ...ServerOption) *Server {
 	var srv = &Server{
 		network: "tcp",
-		address: ":0",
 	}
 	for _, opt := range opts {
 		opt(srv)
@@ -77,6 +76,10 @@ func NewServer(hs *http.Server, opts ...ServerOption) *Server {
 // examples:
 // 	http://127.0.0.1:8000?isSecure=false
 func (s *Server) Endpoint() (*url.URL, error) {
+	if s.address == "" && s.Server.Addr != "" {
+		s.address = s.Server.Addr
+	}
+
 	s.once.Do(func() {
 		if s.endpoint != nil {
 			return
