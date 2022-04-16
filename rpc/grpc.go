@@ -2,86 +2,119 @@ package rpc
 
 import (
 	"context"
+	"github.com/raylin666/go-utils/server"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials/insecure"
+	"net"
+	"sync"
 )
+
+var _ server.Server = (*GRPCServer)(nil)
 
 type GRPCServerOption func(*GRPCServer)
 
+// WithGRPCServerNetwork with server network.
+func WithGRPCServerNetwork(network string) GRPCServerOption {
+	return func(grpcServer *GRPCServer) {
+		grpcServer.network = network
+	}
+}
+
+// WithGRPCServerAddress with server address.
+func WithGRPCServerAddress(address string) GRPCServerOption {
+	return func(grpcServer *GRPCServer) {
+		grpcServer.address = address
+	}
+}
+
+func WithGRPCStreamInterceptor(interceptors ...StreamServerInterceptor) GRPCServerOption {
+	return func(grpcServer *GRPCServer) {
+		grpcServer.StreamServerInterceptor = append(grpcServer.StreamServerInterceptor, interceptors...)
+	}
+}
+
+func WithGRPCUnaryInterceptor(interceptors ...UnaryServerInterceptor) GRPCServerOption {
+	return func(grpcServer *GRPCServer) {
+		grpcServer.UnaryServerInterceptor = append(grpcServer.UnaryServerInterceptor, interceptors...)
+	}
+}
+
 type GRPCServer struct {
 	*grpc.Server
+
+	once                    sync.Once
+	network                 string
+	address                 string
+	err                     error
+	lis                     net.Listener
+	StreamServerInterceptor []StreamServerInterceptor
+	UnaryServerInterceptor  []UnaryServerInterceptor
 }
 
 func NewGRPCServer(opts ...GRPCServerOption) *GRPCServer {
-	var srv = new(GRPCServer)
+	var srv = &GRPCServer{
+		network: "tcp",
+	}
+	for _, opt := range opts {
+		opt(srv)
+	}
+
+	var serverOption []grpc.ServerOption
+	if len(srv.StreamServerInterceptor) > 0 {
+		serverOption = append(serverOption, grpc.StreamInterceptor(createChainStreamServer(srv.StreamServerInterceptor...)))
+	}
+	if len(srv.UnaryServerInterceptor) > 0 {
+		serverOption = append(serverOption, grpc.UnaryInterceptor(createChainUnaryServer(srv.UnaryServerInterceptor...)))
+	}
+
+	srv.Server = grpc.NewServer(serverOption...)
+
 	return srv
 }
 
-func (s *GRPCServer) Start(ctx context.Context) error {
-	panic("implement me")
-}
-
-func (s *GRPCServer) Stop(ctx context.Context) error {
-	panic("implement me")
-}
-
-/*
-var _ GrpcServer = (*grpcServer)(nil)
-
-type GrpcServer interface {
-	RegisterService(f func(s grpc.ServiceRegistrar, srv interface{}), srv interface{})
-	Serve(lis net.Listener) error
-	Stop()
-}
-
-type grpcServer struct {
-	*grpc.Server
-}
-
-type ServerOption grpc.ServerOption
-
-func WithGRPCStreamInterceptor(interceptors ...StreamServerInterceptor) ServerOption {
-	var i = make([]grpc.StreamServerInterceptor, len(interceptors))
-	for k, irt := range interceptors {
-		i[k] = grpc.StreamServerInterceptor(irt)
-	}
-	return grpc.StreamInterceptor(createChainStreamServer(i...))
-}
-
-func WithGRPCUnaryInterceptor(interceptors ...UnaryServerInterceptor) ServerOption {
-	var i = make([]grpc.UnaryServerInterceptor, len(interceptors))
-	for k, irt := range interceptors {
-		i[k] = grpc.UnaryServerInterceptor(irt)
-	}
-	return grpc.UnaryInterceptor(createChainUnaryServer(i...))
-}
-
-func NewGRPCServer(opts ...ServerOption) GrpcServer {
-	var s = new(grpcServer)
-	var o = make([]grpc.ServerOption, len(opts))
-	for k, sopt := range opts {
-		o[k] = sopt.(grpc.ServerOption)
-	}
-	s.Server = grpc.NewServer(o...)
-	return s
-}
-
-func GRPCDialContext(address string, opts ...grpc.DialOption) (conn *grpc.ClientConn, err error) {
+// GRPCDialContext 创建到给定目标的客户端连接
+func GRPCDialContext(ctx context.Context, address string, opts ...grpc.DialOption) (conn *grpc.ClientConn, err error) {
 	if len(opts) <= 0 {
 		opts = append(opts, grpc.WithBlock())
 		opts = append(opts, grpc.WithTransportCredentials(insecure.NewCredentials()))
 	}
 
-	return grpc.DialContext(context.Background(), address, opts...)
+	return grpc.DialContext(ctx, address, opts...)
 }
 
-func (s *grpcServer) RegisterService(f func(s grpc.ServiceRegistrar, srv interface{}), srv interface{}) {
-	f(s.Server, srv)
+// Preset 预加载服务数据参数
+func (s *GRPCServer) Preset() error {
+	s.once.Do(func() {
+		lis, err := net.Listen(s.network, s.address)
+		if err != nil {
+			s.err = err
+			return
+		}
+		s.lis = lis
+	})
+
+	if s.err != nil {
+		return s.err
+	}
+
+	return nil
 }
 
-func (s *grpcServer) Serve(lis net.Listener) error {
-	return s.Server.Serve(lis)
+func (s *GRPCServer) Start(ctx context.Context) error {
+	err := s.Preset()
+	if err != nil {
+		return err
+	}
+
+	err = s.Server.Serve(s.lis)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (s *grpcServer) Stop() {
+func (s *GRPCServer) Stop(ctx context.Context) error {
 	s.Server.Stop()
-}*/
+	return nil
+}

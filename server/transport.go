@@ -5,6 +5,11 @@ import (
 	"net/url"
 )
 
+const (
+	HTTPServerType = "HTTP"
+	GRPCServerType = "gRPC"
+)
+
 // Server is transport server.
 type Server interface {
 	Start(context.Context) error
