@@ -22,7 +22,7 @@ func NewTracerProvider(exporter tracesdk.SpanExporter, attrs ...attribute.KeyVal
 	var tracer = new(Tracer)
 	bsp := tracesdk.NewBatchSpanProcessor(exporter)
 	tracer.provider = tracesdk.NewTracerProvider(
-		tracesdk.WithSampler(tracesdk.ParentBased(tracesdk.NeverSample())),
+		tracesdk.WithSampler(tracesdk.AlwaysSample()),
 		tracesdk.WithSpanProcessor(bsp),
 		// Always be sure to batch in production.
 		tracesdk.WithBatcher(exporter),
