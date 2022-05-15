@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 	"time"
 )
@@ -15,6 +16,7 @@ type Client interface {
 	Options() *option
 	DB() *gorm.DB
 	SqlDB() *sql.DB
+	WithLogger(logger logger.Interface)
 	WithPluginBeforeHandler(before func(db *gorm.DB), after func(db *gorm.DB, sql string, ts time.Time)) error
 }
 
@@ -83,6 +85,10 @@ func (c *client) DB() *gorm.DB {
 
 func (c *client) SqlDB() *sql.DB {
 	return c.sqlDb
+}
+
+func (c *client) WithLogger(logger logger.Interface)  {
+	c.db.Logger = logger
 }
 
 func (c *client) WithPluginBeforeHandler(before func(db *gorm.DB), after func(db *gorm.DB, sql string, ts time.Time)) error {

@@ -65,12 +65,8 @@ func NewServer(hs *http.Server, opts ...ServerOption) *Server {
 		opt(srv)
 	}
 
-	if srv.address == "" && srv.Server.Addr != "" {
-		srv.address = srv.Server.Addr
-	}
-	if hs.TLSConfig == nil {
-		hs.TLSConfig = srv.tlsConf
-	}
+	if srv.address == "" && srv.Server.Addr != "" { srv.address = srv.Server.Addr }
+	if hs.TLSConfig == nil { hs.TLSConfig = srv.tlsConf }
 	srv.Server = hs
 	return srv
 }
@@ -90,7 +86,7 @@ func (s *Server) Endpoint() (*url.URL, error) {
 		}
 		addr, err := ut.ExtractAddress(s.address, lis)
 		if err != nil {
-			lis.Close()
+			_ = lis.Close()
 			s.err = err
 			return
 		}
