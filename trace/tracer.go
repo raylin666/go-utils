@@ -47,14 +47,11 @@ func (t *Tracer) UnregisterSpanProcessor(s tracesdk.SpanProcessor) {
 	t.provider.UnregisterSpanProcessor(s)
 }
 
-func (t *Tracer) SchedulerStart(ctx context.Context, spanName string) (context.Context, trace.Span) {
+// SchedulerRootStart 启动一个 Root 链路追踪器
+func (t *Tracer) SchedulerRootStart(ctx context.Context, spanName string) (context.Context, trace.Span) {
 	tr := t.provider.Tracer(TracePackageName)
-	childCtx, childSpan := tr.Start(ctx, spanName)
-	return childCtx, childSpan
-}
-
-func (t *Tracer) SchedulerEnd(span trace.Span, options ...trace.SpanEndOption) {
-	span.End(options...)
+	rootCtx, rootSpan := tr.Start(ctx, spanName)
+	return rootCtx, rootSpan
 }
 
 func (t *Tracer) ForceFlush(ctx context.Context) error {

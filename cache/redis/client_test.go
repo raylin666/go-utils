@@ -22,7 +22,7 @@ func TestKeys(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	t.Log(client.Keys("*"))
+	t.Log(client.Keys(context.Background(), "*"))
 }
 
 func TestPipeline(t *testing.T) {
@@ -31,12 +31,13 @@ func TestPipeline(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	cmd, err := client.TxPipeline(func(pipe redis.Pipeliner) {
+	var ctx = context.Background()
+	cmd, err := client.TxPipeline(ctx, func(pipe redis.Pipeliner) {
 		pipe.Set(context.TODO(), "name", "kaka", time.Hour)
 		pipe.Get(context.TODO(), "name")
 	})
 
 	t.Log(cmd)
 
-	t.Log(client.Command())
+	t.Log(client.Command(ctx))
 }
