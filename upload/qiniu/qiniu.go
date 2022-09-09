@@ -91,6 +91,8 @@ type Qiniu interface {
 	DropBucket(bucket string) error
 	// Buckets 用来获取空间列表
 	Buckets(shared bool) (buckets []string, err error)
+	// WithPutRet 设置返回参数
+	WithPutRet(ret interface{})
 }
 
 // New 创建对象
@@ -135,6 +137,11 @@ func (opts *options) region(zone string) *storage.Region {
 	}
 
 	return zoneObj
+}
+
+// WithPutRet 设置返回参数结果
+func (opt *options) WithPutRet(ret interface{}) {
+	opt.putRet = ret
 }
 
 // GetMac 构建鉴权对象
