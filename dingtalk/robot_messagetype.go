@@ -22,7 +22,6 @@ type robotLinkMessageType struct {
 }
 
 type RobotLinkMessageType struct {
-	Msgtype string `json:"msgtype"`
 	Link    struct {
 		Text       string `json:"text"`
 		Title      string `json:"title"`
@@ -37,7 +36,6 @@ type robotMarkdownMessageType struct {
 }
 
 type RobotMarkdownMessageType struct {
-	Msgtype  string `json:"msgtype"`
 	Markdown struct {
 		Title string `json:"title"`
 		Text  string `json:"text"`
@@ -62,7 +60,6 @@ type RobotAllActionCardMessageType struct {
 		SingleTitle    string `json:"singleTitle"`
 		SingleURL      string `json:"singleURL"`
 	} `json:"actionCard"`
-	Msgtype string `json:"msgtype"`
 }
 
 type robotFirstActionCardMessageType struct {
@@ -71,7 +68,6 @@ type robotFirstActionCardMessageType struct {
 }
 
 type RobotFirstActionCardMessageType struct {
-	Msgtype    string `json:"msgtype"`
 	ActionCard struct {
 		Title          string `json:"title"`
 		Text           string `json:"text"`
@@ -89,7 +85,6 @@ type robotFeedCardMessageType struct {
 }
 
 type RobotFeedCardMessageType struct {
-	Msgtype  string `json:"msgtype"`
 	FeedCard struct {
 		Links []struct {
 			Title      string `json:"title"`
