@@ -22,7 +22,6 @@ type jwt struct {
 }
 
 type jwtClaims struct {
-	ID string `json:"id"`
 	gojwt.RegisteredClaims
 }
 
@@ -35,7 +34,6 @@ func NewJWT(app string, key string, secret string) JWT {
 }
 
 type JWTClaimsOptions struct {
-	ID       string
 	Audience gojwt.ClaimStrings
 }
 
@@ -57,17 +55,17 @@ func (t *jwt) GenerateToken(id string, expireDuration time.Duration, opt JWTClai
 		NotBefore: gojwt.NewNumericDate(ts),
 		IssuedAt:  gojwt.NewNumericDate(ts),
 		ExpiresAt: gojwt.NewNumericDate(ts.Add(expireDuration)),
+		ID:        id,
 	}
 
-	if opt.ID != "" {
-		registeredClaims.ID = opt.ID
-	}
-
+	// 接收该JWT的一方, 未传值情况下默认保存ID，如果需要多个接收方共享通过Token, 需要主动传递 JWTClaimsOptions 对象。
 	if opt.Audience != nil {
 		registeredClaims.Audience = opt.Audience
+	} else {
+		registeredClaims.Audience = JWTClaimsOptions{Audience: []string{id}}.Audience
 	}
 
-	claims := jwtClaims{id, registeredClaims}
+	claims := jwtClaims{registeredClaims}
 	tokenString, err = gojwt.NewWithClaims(gojwt.SigningMethodHS256, claims).SignedString([]byte(t.secret))
 	return
 }

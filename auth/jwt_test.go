@@ -24,7 +24,7 @@ func TestGenerateToken(t *testing.T) {
 
 func TestParseToken(t *testing.T) {
 	token := NewJWT(app, key, secret)
-	claims, err := token.ParseToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE1MzY2MiIsImlzcyI6IjE4MjM3MzY0Mzk4Mjc4NiIsInN1YiI6Im1hY29zIiwiZXhwIjoxNjQ4OTUxODc0LCJuYmYiOjE2NDg4NjU0NzQsImlhdCI6MTY0ODg2NTQ3NH0.WDes8MQ6u0EnUm0xTEZnxZrYayadzNK8mGOzuR0nB0I")
+	claims, err := token.ParseToken("eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiIxODIzNzM2NDM5ODI3ODYiLCJzdWIiOiJtYWNvcyIsImF1ZCI6WyIxNTM2NjIiXSwiZXhwIjoxNjY4MTI1NDgyLCJuYmYiOjE2NjgwMzkwODIsImlhdCI6MTY2ODAzOTA4MiwianRpIjoiMTUzNjYyIn0.khDIKq0oTPOvOS0rCn9lUtvx-pu0i4_hYf4ThUpQ5gs")
 	if err != nil {
 		t.Fatal(err)
 	}
