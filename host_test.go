@@ -105,3 +105,8 @@ func TestExtractHostPort(t *testing.T) {
 		t.Fatalf("expected: not nil got %v", nil)
 	}
 }
+
+func TestServerIp(t *testing.T) {
+	ip := GetLocalServerIp()
+	t.Logf(ip)
+}
