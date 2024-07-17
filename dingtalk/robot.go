@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	httpclient "github.com/raylin666/go-utils/http"
+	httpclient "github.com/raylin666/v2/go-utils/http"
 	"net/http"
 )
 

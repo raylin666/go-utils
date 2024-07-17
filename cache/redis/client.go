@@ -3,7 +3,7 @@ package redis
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	"github.com/raylin666/go-utils/cache/redis/cmd"
+	"github.com/raylin666/go-utils/v2/cache/redis/cmd"
 	"time"
 )
 
@@ -214,8 +214,8 @@ type Client interface {
 	SlowLogGet(ctx context.Context, num int64) *cmd.SlowLogCmd
 	Time(ctx context.Context) *cmd.TimeCmd
 	DebugObject(ctx context.Context, key string) *cmd.StringCmd
-	ReadOnly(ctx context.Context, ) *cmd.StatusCmd
-	ReadWrite(ctx context.Context, ) *cmd.StatusCmd
+	ReadOnly(ctx context.Context) *cmd.StatusCmd
+	ReadWrite(ctx context.Context) *cmd.StatusCmd
 	MemoryUsage(ctx context.Context, key string, samples ...int) *cmd.IntCmd
 	Eval(ctx context.Context, script string, keys []string, args ...interface{}) *cmd.Cmd
 	EvalSha(ctx context.Context, sha1 string, keys []string, args ...interface{}) *cmd.Cmd

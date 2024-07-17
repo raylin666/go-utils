@@ -4,8 +4,8 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	ut "github.com/raylin666/go-utils"
-	"github.com/raylin666/go-utils/server"
+	ut "github.com/raylin666/go-utils/v2"
+	"github.com/raylin666/go-utils/v2/server"
 	"net"
 	"net/http"
 	"net/url"
@@ -48,13 +48,13 @@ func WithServerTLSConfig(c *tls.Config) ServerOption {
 type Server struct {
 	*http.Server
 
-	once            sync.Once
-	err             error
-	network         string
-	address         string
-	lis             net.Listener
-	endpoint        *url.URL
-	tlsConf         *tls.Config
+	once     sync.Once
+	err      error
+	network  string
+	address  string
+	lis      net.Listener
+	endpoint *url.URL
+	tlsConf  *tls.Config
 }
 
 func NewServer(hs *http.Server, opts ...ServerOption) *Server {
@@ -65,8 +65,12 @@ func NewServer(hs *http.Server, opts ...ServerOption) *Server {
 		opt(srv)
 	}
 
-	if srv.address == "" && srv.Server.Addr != "" { srv.address = srv.Server.Addr }
-	if hs.TLSConfig == nil { hs.TLSConfig = srv.tlsConf }
+	if srv.address == "" && srv.Server.Addr != "" {
+		srv.address = srv.Server.Addr
+	}
+	if hs.TLSConfig == nil {
+		hs.TLSConfig = srv.tlsConf
+	}
 	srv.Server = hs
 	return srv
 }
