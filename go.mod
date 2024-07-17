@@ -1,4 +1,4 @@
-module github.com/raylin666/go-utils/v2
+module github.com/raylin666/go-utils
 
 go 1.16
 

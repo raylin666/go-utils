@@ -3,7 +3,7 @@ package redis
 import (
 	"context"
 	"github.com/go-redis/redis/v8"
-	"github.com/raylin666/go-utils/v2/cache/redis/cmd"
+	"github.com/raylin666/go-utils/cache/redis/cmd"
 	"time"
 )
 
