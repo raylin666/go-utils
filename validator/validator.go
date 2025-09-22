@@ -9,6 +9,7 @@ import (
 	en_translations "github.com/go-playground/validator/v10/translations/en"
 	zh_translations "github.com/go-playground/validator/v10/translations/zh"
 	"reflect"
+	"strings"
 )
 
 var _ Validator = (*validator)(nil)
@@ -58,7 +59,11 @@ func New(opts ...Option) Validator {
 	var validate = govalidator.New()
 	// 注册一个函数，获取 struct tag 里自定义的字段名
 	validate.RegisterTagNameFunc(func(fld reflect.StructField) string {
-		name := fld.Tag.Get(v.tagname)
+		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
+		if name == "-" {
+			return "" // 返回空字符串表示忽略该字段
+		}
+
 		return name
 	})
 
