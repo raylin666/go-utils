@@ -21,7 +21,7 @@
 ## 安装
 
 ```bash
-go get github.com/raylin666/go-utils
+go get github.com/raylin666/go-utils/v2@v2.0.0
 ```
 
 ---
@@ -56,15 +56,15 @@ go get github.com/raylin666/go-utils
 
 ```go
 import (
-    "github.com/raylin666/go-utils/auth"
-    "github.com/raylin666/go-utils/cache/redis"
-    "github.com/raylin666/go-utils/config"
-    "github.com/raylin666/go-utils/crypto"
-    "github.com/raylin666/go-utils/db/gorm"
-    "github.com/raylin666/go-utils/logger"
-    "github.com/raylin666/go-utils/mail"
-    "github.com/raylin666/go-utils/timeutil"
-    "github.com/raylin666/go-utils/validator"
+    "github.com/raylin666/go-utils/v2/auth"
+    "github.com/raylin666/go-utils/v2/cache/redis"
+    "github.com/raylin666/go-utils/v2/config"
+    "github.com/raylin666/go-utils/v2/crypto"
+    "github.com/raylin666/go-utils/v2/db/gorm"
+    "github.com/raylin666/go-utils/v2/logger"
+    "github.com/raylin666/go-utils/v2/mail"
+    "github.com/raylin666/go-utils/v2/timeutil"
+    "github.com/raylin666/go-utils/v2/validator"
 )
 ```
 
@@ -84,7 +84,7 @@ package main
 import (
     "errors"
     "time"
-    "github.com/raylin666/go-utils/auth"
+    "github.com/raylin666/go-utils/v2/auth"
 )
 
 func main() {
@@ -137,7 +137,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/crypto"
+    "github.com/raylin666/go-utils/v2/crypto"
 )
 
 func main() {
@@ -168,7 +168,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/raylin666/go-utils/cache/redis"
+    "github.com/raylin666/go-utils/v2/cache/redis"
 )
 
 func main() {
@@ -226,7 +226,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/raylin666/go-utils/db/gorm"
+    "github.com/raylin666/go-utils/v2/db/gorm"
 )
 
 func main() {
@@ -283,7 +283,7 @@ YAML 配置文件加载，支持文件路径和字符串两种方式。
 package main
 
 import (
-    "github.com/raylin666/go-utils/config"
+    "github.com/raylin666/go-utils/v2/config"
 )
 
 type AppConfig struct {
@@ -320,7 +320,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/logger"
+    "github.com/raylin666/go-utils/v2/logger"
     "go.uber.org/zap"
 )
 
@@ -373,7 +373,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/raylin666/go-utils/mail"
+    "github.com/raylin666/go-utils/v2/mail"
 )
 
 func main() {
@@ -413,7 +413,7 @@ package main
 
 import (
     "fmt"
-    "github.com/raylin666/go-utils/validator"
+    "github.com/raylin666/go-utils/v2/validator"
 )
 
 type User struct {
@@ -459,7 +459,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/raylin666/go-utils/timeutil"
+    "github.com/raylin666/go-utils/v2/timeutil"
 )
 
 func main() {
@@ -511,7 +511,7 @@ package main
 
 import (
     "context"
-    "github.com/raylin666/go-utils/timeutil"
+    "github.com/raylin666/go-utils/v2/timeutil"
 )
 
 func main() {
@@ -547,7 +547,7 @@ package main
 import (
     "net/http"
     "time"
-    "github.com/raylin666/go-utils/http"
+    "github.com/raylin666/go-utils/v2/http"
 )
 
 func main() {
@@ -582,7 +582,7 @@ package main
 import (
     "context"
     "net/http"
-    "github.com/raylin666/go-utils/http"
+    "github.com/raylin666/go-utils/v2/http"
 )
 
 func main() {
@@ -616,7 +616,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/dingtalk"
+    "github.com/raylin666/go-utils/v2/dingtalk"
 )
 
 func main() {
@@ -650,7 +650,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/upload/qiniu"
+    "github.com/raylin666/go-utils/v2/upload/qiniu"
     "github.com/qiniu/go-sdk/v7/storage"
 )
 
@@ -692,7 +692,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/netx"
+    "github.com/raylin666/go-utils/v2/netx"
 )
 
 func main() {
@@ -723,7 +723,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/filesystem"
+    "github.com/raylin666/go-utils/v2/filesystem"
 )
 
 func main() {
@@ -751,7 +751,7 @@ package main
 import (
     "context"
     "net/http"
-    "github.com/raylin666/go-utils/middleware"
+    "github.com/raylin666/go-utils/v2/middleware"
 )
 
 func main() {
@@ -794,7 +794,7 @@ func authMiddleware(next http.Handler) http.Handler {
 package main
 
 import (
-    "github.com/raylin666/go-utils/server/system"
+    "github.com/raylin666/go-utils/v2/server/system"
 )
 
 func main() {
@@ -820,7 +820,7 @@ func main() {
 package main
 
 import (
-    "github.com/raylin666/go-utils/errors"
+    "github.com/raylin666/go-utils/v2/errors"
 )
 
 func main() {

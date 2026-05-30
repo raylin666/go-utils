@@ -1,10 +1,11 @@
 package dingtalk
 
 import (
-	httpclient "github.com/raylin666/go-utils/http"
 	"io"
 	"testing"
 	"time"
+
+	httpclient "github.com/raylin666/go-utils/v2/http"
 )
 
 func TestRobotSendTextMessage(t *testing.T) {

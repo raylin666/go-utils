@@ -10,12 +10,13 @@ import (
 	"context"
 	"crypto/tls"
 	"errors"
-	"github.com/raylin666/go-utils/netx"
-	"github.com/raylin666/go-utils/server"
 	"net"
 	"net/http"
 	"net/url"
 	"sync"
+
+	"github.com/raylin666/go-utils/v2/netx"
+	"github.com/raylin666/go-utils/v2/server"
 )
 
 var _ server.Server = (*Server)(nil)
@@ -83,7 +84,8 @@ func NewServer(hs *http.Server, opts ...ServerOption) *Server {
 
 // Endpoint return a real address to registry endpoint.
 // examples:
-// 	http://127.0.0.1:8000?isSecure=false
+//
+//	http://127.0.0.1:8000?isSecure=false
 func (s *Server) Endpoint() (*url.URL, error) {
 	s.once.Do(func() {
 		if s.endpoint != nil {

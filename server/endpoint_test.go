@@ -53,9 +53,9 @@ func TestNewEndpoint(t *testing.T) {
 		want *url.URL
 	}{
 		{
-			name: "https://github.com/raylin666/go-utils/",
-			args: args{"https", "github.com/raylin666/go-utils/", false},
-			want: &url.URL{Scheme: "https", Host: "github.com/raylin666/go-utils/"},
+			name: "https://github.com/raylin666/go-utils/v2/",
+			args: args{"https", "github.com/raylin666/go-utils/v2/", false},
+			want: &url.URL{Scheme: "https", Host: "github.com/raylin666/go-utils/v2/"},
 		},
 		{
 			name: "http://www.ls331.com/",
@@ -86,7 +86,7 @@ func TestParseEndpoint(t *testing.T) {
 	}{
 		{
 			name:    "raylin666",
-			args:    args{endpoints: []string{"https://github.com/raylin666/go-utils?isSecure=true"}, scheme: "https", isSecure: true},
+			args:    args{endpoints: []string{"https://github.com/raylin666/go-utils/v2?isSecure=true"}, scheme: "https", isSecure: true},
 			want:    "github.com",
 			wantErr: false,
 		},

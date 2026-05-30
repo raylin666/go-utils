@@ -6,8 +6,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	httpclient "github.com/raylin666/go-utils/http"
 	"net/http"
+
+	httpclient "github.com/raylin666/go-utils/v2/http"
 )
 
 const (
@@ -63,7 +64,7 @@ func (r *robot) sendMessage(msgType string, data interface{}) (*http.Response, e
 	case "feedCard":
 		message[msgType] = data
 	}
-	
+
 	jsondata, err := json.Marshal(message)
 	if err != nil {
 		return nil, err

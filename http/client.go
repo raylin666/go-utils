@@ -12,7 +12,7 @@ import (
 
 	"github.com/gojek/heimdall/v7"
 	"github.com/gojek/heimdall/v7/httpclient"
-	ut "github.com/raylin666/go-utils"
+	ut "github.com/raylin666/go-utils/v2"
 )
 
 var _ Client = (*client)(nil)
