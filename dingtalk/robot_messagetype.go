@@ -1,10 +1,5 @@
 package dingtalk
 
-type robotTextMessageType struct {
-	RobotTextMessageType
-	Msgtype string `json:"msgtype"`
-}
-
 type RobotTextMessageType struct {
 	At struct {
 		AtMobiles []string `json:"atMobiles"`
@@ -16,23 +11,13 @@ type RobotTextMessageType struct {
 	} `json:"text"`
 }
 
-type robotLinkMessageType struct {
-	RobotLinkMessageType
-	Msgtype string `json:"msgtype"`
-}
-
 type RobotLinkMessageType struct {
-	Link    struct {
+	Link struct {
 		Text       string `json:"text"`
 		Title      string `json:"title"`
 		PicUrl     string `json:"picUrl"`
 		MessageUrl string `json:"messageUrl"`
 	} `json:"link"`
-}
-
-type robotMarkdownMessageType struct {
-	RobotMarkdownMessageType
-	Msgtype string `json:"msgtype"`
 }
 
 type RobotMarkdownMessageType struct {
@@ -47,11 +32,6 @@ type RobotMarkdownMessageType struct {
 	} `json:"at"`
 }
 
-type robotAllActionCardMessageType struct {
-	RobotAllActionCardMessageType
-	Msgtype string `json:"msgtype"`
-}
-
 type RobotAllActionCardMessageType struct {
 	ActionCard struct {
 		Title          string `json:"title"`
@@ -60,11 +40,6 @@ type RobotAllActionCardMessageType struct {
 		SingleTitle    string `json:"singleTitle"`
 		SingleURL      string `json:"singleURL"`
 	} `json:"actionCard"`
-}
-
-type robotFirstActionCardMessageType struct {
-	RobotFirstActionCardMessageType
-	Msgtype string `json:"msgtype"`
 }
 
 type RobotFirstActionCardMessageType struct {
@@ -77,11 +52,6 @@ type RobotFirstActionCardMessageType struct {
 			ActionURL string `json:"actionURL"`
 		} `json:"btns"`
 	} `json:"actionCard"`
-}
-
-type robotFeedCardMessageType struct {
-	RobotFeedCardMessageType
-	Msgtype string `json:"msgtype"`
 }
 
 type RobotFeedCardMessageType struct {

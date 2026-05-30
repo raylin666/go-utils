@@ -60,8 +60,9 @@ func NewDatetime(opts ...Option) *Datetime {
 	datetime.option = o
 	cst, err = time.LoadLocation(o.location)
 	if err != nil {
-		time.Local = cst // 设置时区
+		cst = time.UTC
 	}
+	time.Local = cst
 
 	return datetime
 }

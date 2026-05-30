@@ -1,6 +1,6 @@
 package cmd
 
-import "github.com/go-redis/redis/v8"
+import "github.com/redis/go-redis/v9"
 
 type GeoLocationCmd struct {
 	CMD *redis.GeoLocationCmd

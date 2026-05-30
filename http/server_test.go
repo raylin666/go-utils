@@ -20,5 +20,5 @@ func TestServer(t *testing.T) {
 type TServerHandler struct {}
 
 func (t *TServerHandler) ServeHTTP(w http.ResponseWriter, r *http.Request)  {
-	fmt.Println(fmt.Sprintf("hello world! %v - %v", w, r))
+	fmt.Printf("hello world! %v - %v\n", w, r)
 }

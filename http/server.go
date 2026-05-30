@@ -1,10 +1,16 @@
+// Package http 提供HTTP服务器和客户端功能
+// 功能特性：
+//   - HTTP服务器管理（启动、停止、TLS支持）
+//   - 服务发现端点注册
+//   - 网络配置（TCP/UDP）
+//   - 地址自动提取
 package http
 
 import (
 	"context"
 	"crypto/tls"
 	"errors"
-	ut "github.com/raylin666/go-utils"
+	"github.com/raylin666/go-utils/netx"
 	"github.com/raylin666/go-utils/server"
 	"net"
 	"net/http"
@@ -88,7 +94,7 @@ func (s *Server) Endpoint() (*url.URL, error) {
 			s.err = err
 			return
 		}
-		addr, err := ut.ExtractAddress(s.address, lis)
+		addr, err := netx.ExtractAddress(s.address, lis)
 		if err != nil {
 			_ = lis.Close()
 			s.err = err

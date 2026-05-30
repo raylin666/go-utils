@@ -1,3 +1,6 @@
+// Package middleware provides HTTP/gRPC middleware chain utilities.
+// It supports middleware chaining for both endpoint handlers
+// and HTTP routers.
 package middleware
 
 import (

@@ -1,3 +1,6 @@
+// Package server provides service lifecycle management utilities.
+// It defines Server and Endpointer interfaces for transport servers,
+// supporting HTTP and gRPC server types.
 package server
 
 import (

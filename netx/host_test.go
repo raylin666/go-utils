@@ -1,4 +1,4 @@
-package ut
+package netx
 
 import (
 	"net"
@@ -108,5 +108,5 @@ func TestExtractHostPort(t *testing.T) {
 
 func TestServerIp(t *testing.T) {
 	ip := GetLocalServerIp()
-	t.Logf(ip)
+	t.Logf("%s", ip)
 }

@@ -18,6 +18,7 @@ type option struct {
 	timeLayout     string
 	disableConsole bool
 	levelEncoder   zapcore.LevelEncoder
+	initErr        error // 存储初始化错误
 }
 
 // WithDebugLevel only greater than 'level' will output
@@ -56,15 +57,20 @@ func WithField(key, value string) Option {
 }
 
 // WithPathFile write log to some file
+// 注意：如果文件创建失败，会在初始化时存储错误，NewJSONLogger会返回该错误
 func WithPathFile(file string) Option {
 	dir := filepath.Dir(file)
-	if err := os.MkdirAll(dir, 0766); err != nil {
-		panic(err)
+	if err := os.MkdirAll(dir, 0750); err != nil {
+		return func(opt *option) {
+			opt.initErr = err
+		}
 	}
 
-	f, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0766)
+	f, err := os.OpenFile(file, os.O_CREATE|os.O_APPEND|os.O_RDWR, 0640)
 	if err != nil {
-		panic(err)
+		return func(opt *option) {
+			opt.initErr = err
+		}
 	}
 
 	return func(opt *option) {
@@ -81,10 +87,13 @@ type PathFileRotationOption struct {
 }
 
 // WithPathFileRotation write log to some file with rotation
+// 注意：如果目录创建失败，会在初始化时存储错误，NewJSONLogger会返回该错误
 func WithPathFileRotation(file string, pfopt PathFileRotationOption) Option {
 	dir := filepath.Dir(file)
-	if err := os.MkdirAll(dir, 0766); err != nil {
-		panic(err)
+	if err := os.MkdirAll(dir, 0750); err != nil {
+		return func(opt *option) {
+			opt.initErr = err
+		}
 	}
 	return func(opt *option) {
 		opt.file = &lumberjack.Logger{ // concurrent-safed

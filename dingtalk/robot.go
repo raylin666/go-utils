@@ -1,3 +1,5 @@
+// Package dingtalk provides DingTalk robot message pushing utilities.
+// It supports various message types: text, link, markdown, actionCard, feedCard.
 package dingtalk
 
 import (
@@ -43,50 +45,52 @@ func (r *robot) withHeader() http.Header {
 	return headers
 }
 
-func (r *robot) SendTextMessage(data RobotTextMessageType) (*http.Response, error) {
-	var message = new(robotTextMessageType)
-	message.Msgtype = "text"
-	message.RobotTextMessageType = data
-	jsondata, _ := json.Marshal(message)
+// sendMessage 通用消息发送方法，减少代码重复
+func (r *robot) sendMessage(msgType string, data interface{}) (*http.Response, error) {
+	message := map[string]interface{}{
+		"msgtype": msgType,
+	}
+	// 根据消息类型设置对应字段
+	switch msgType {
+	case "text":
+		message[msgType] = data
+	case "link":
+		message[msgType] = data
+	case "markdown":
+		message[msgType] = data
+	case "actionCard":
+		message[msgType] = data
+	case "feedCard":
+		message[msgType] = data
+	}
+	
+	jsondata, err := json.Marshal(message)
+	if err != nil {
+		return nil, err
+	}
 	return r.client.POST(r.api, bytes.NewBuffer(jsondata), r.withHeader())
+}
+
+func (r *robot) SendTextMessage(data RobotTextMessageType) (*http.Response, error) {
+	return r.sendMessage("text", data)
 }
 
 func (r *robot) SendLinkMessage(data RobotLinkMessageType) (*http.Response, error) {
-	var message = new(robotLinkMessageType)
-	message.Msgtype = "link"
-	message.RobotLinkMessageType = data
-	jsondata, _ := json.Marshal(message)
-	return r.client.POST(r.api, bytes.NewBuffer(jsondata), r.withHeader())
+	return r.sendMessage("link", data)
 }
 
 func (r *robot) SendMarkdownMessage(data RobotMarkdownMessageType) (*http.Response, error) {
-	var message = new(robotMarkdownMessageType)
-	message.Msgtype = "markdown"
-	message.RobotMarkdownMessageType = data
-	jsondata, _ := json.Marshal(message)
-	return r.client.POST(r.api, bytes.NewBuffer(jsondata), r.withHeader())
+	return r.sendMessage("markdown", data)
 }
 
 func (r *robot) SendAllActionCardMessage(data RobotAllActionCardMessageType) (*http.Response, error) {
-	var message = new(robotAllActionCardMessageType)
-	message.Msgtype = "actionCard"
-	message.RobotAllActionCardMessageType = data
-	jsondata, _ := json.Marshal(message)
-	return r.client.POST(r.api, bytes.NewBuffer(jsondata), r.withHeader())
+	return r.sendMessage("actionCard", data)
 }
 
 func (r *robot) SendFirstActionCardMessage(data RobotFirstActionCardMessageType) (*http.Response, error) {
-	var message = new(robotFirstActionCardMessageType)
-	message.Msgtype = "actionCard"
-	message.RobotFirstActionCardMessageType = data
-	jsondata, _ := json.Marshal(message)
-	return r.client.POST(r.api, bytes.NewBuffer(jsondata), r.withHeader())
+	return r.sendMessage("actionCard", data)
 }
 
 func (r *robot) SendFeedCardMessage(data RobotFeedCardMessageType) (*http.Response, error) {
-	var message = new(robotFeedCardMessageType)
-	message.Msgtype = "feedCard"
-	message.RobotFeedCardMessageType = data
-	jsondata, _ := json.Marshal(message)
-	return r.client.POST(r.api, bytes.NewBuffer(jsondata), r.withHeader())
+	return r.sendMessage("feedCard", data)
 }

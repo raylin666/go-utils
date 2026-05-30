@@ -16,7 +16,7 @@ type basicConfig struct {
 	bucket    string
 }
 
-// 存储配置
+// Config 存储配置
 type Config struct {
 	*storage.PutPolicy
 	*storage.Config
@@ -26,8 +26,8 @@ type Config struct {
 type options struct {
 	*basicConfig
 	*Config
-	putRet      interface{}
-	putExtra    interface{}
+	putRet   interface{}
+	putExtra interface{}
 }
 
 var _ Qiniu = (*options)(nil)
@@ -97,12 +97,18 @@ type Qiniu interface {
 
 // New 创建对象
 func New(accessKey string, secretKey string, bucket string, zone string, c *Config) Qiniu {
-	if c.PutPolicy == nil {
-		c.PutPolicy = new(storage.PutPolicy)
-	}
-
-	if c.Config == nil {
-		c.Config = new(storage.Config)
+	if c == nil {
+		c = &Config{
+			PutPolicy: new(storage.PutPolicy),
+			Config:    new(storage.Config),
+		}
+	} else {
+		if c.PutPolicy == nil {
+			c.PutPolicy = new(storage.PutPolicy)
+		}
+		if c.Config == nil {
+			c.Config = new(storage.Config)
+		}
 	}
 
 	var opts = new(options)
@@ -140,119 +146,119 @@ func (opts *options) region(zone string) *storage.Region {
 }
 
 // WithPutRet 设置返回参数结果
-func (opt *options) WithPutRet(ret interface{}) {
-	opt.putRet = ret
+func (opts *options) WithPutRet(ret interface{}) {
+	opts.putRet = ret
 }
 
 // GetMac 构建鉴权对象
-func (opt *options) GetMac() *qbox.Mac {
-	return qbox.NewMac(opt.accessKey, opt.secretKey)
+func (opts *options) GetMac() *qbox.Mac {
+	return qbox.NewMac(opts.accessKey, opts.secretKey)
 }
 
 // GetBucketManager 构建资源管理对象
-func (opt *options) GetBucketManager() *storage.BucketManager {
-	return storage.NewBucketManager(opt.GetMac(), opt.Config.Config)
+func (opts *options) GetBucketManager() *storage.BucketManager {
+	return storage.NewBucketManager(opts.GetMac(), opts.Config.Config)
 }
 
 // GetCdnManager 构建CDN资源管理对象
-func (opt *options) GetCdnManager() *cdn.CdnManager {
-	return cdn.NewCdnManager(opt.GetMac())
+func (opts *options) GetCdnManager() *cdn.CdnManager {
+	return cdn.NewCdnManager(opts.GetMac())
 }
 
 // GetUploadToken 获取上传凭证
-func (opt *options) GetUploadToken() string {
-	mac := opt.GetMac()
-	return opt.PutPolicy.UploadToken(mac)
+func (opts *options) GetUploadToken() string {
+	mac := opts.GetMac()
+	return opts.PutPolicy.UploadToken(mac)
 }
 
 // GetFormUploader 上传文件/字节数组上传/数据流上传（表单方式）
-func (opt *options) GetFormUploader() *storage.FormUploader {
-	return storage.NewFormUploader(opt.Config.Config)
+func (opts *options) GetFormUploader() *storage.FormUploader {
+	return storage.NewFormUploader(opts.Config.Config)
 }
 
 // GetResumeUploader 文件分片上传/文件断点续传（表单方式）
-func (opt *options) GetResumeUploader() *storage.ResumeUploaderV2 {
-	return storage.NewResumeUploaderV2(opt.Config.Config)
+func (opts *options) GetResumeUploader() *storage.ResumeUploaderV2 {
+	return storage.NewResumeUploaderV2(opts.Config.Config)
 }
 
 // FormUploaderPutFile 文件上传
-func (opt *options) FormUploaderPutFile(localFile string, key string) (interface{}, error) {
+func (opts *options) FormUploaderPutFile(localFile string, key string) (interface{}, error) {
 	var (
 		extra storage.PutExtra
 	)
 
-	if _, ok := opt.putExtra.(storage.PutExtra); ok {
-		extra = opt.putExtra.(storage.PutExtra)
+	if _, ok := opts.putExtra.(storage.PutExtra); ok {
+		extra = opts.putExtra.(storage.PutExtra)
 	}
 
-	err := opt.GetFormUploader().PutFile(context.Background(), &opt.putRet, opt.GetUploadToken(), key, localFile, &extra)
+	err := opts.GetFormUploader().PutFile(context.Background(), &opts.putRet, opts.GetUploadToken(), key, localFile, &extra)
 	if err != nil {
 		return nil, err
 	}
 
-	return opt.putRet, nil
+	return opts.putRet, nil
 }
 
 // FormUploaderPut 字节数组上传/数据流上传
-func (opt *options) FormUploaderPut(data []byte, key string) (interface{}, error) {
+func (opts *options) FormUploaderPut(data []byte, key string) (interface{}, error) {
 	var (
 		extra storage.PutExtra
 	)
 
-	if _, ok := opt.putExtra.(storage.PutExtra); ok {
-		extra = opt.putExtra.(storage.PutExtra)
+	if _, ok := opts.putExtra.(storage.PutExtra); ok {
+		extra = opts.putExtra.(storage.PutExtra)
 	}
 
 	dataLen := int64(len(data))
-	err := opt.GetFormUploader().Put(context.Background(), &opt.putRet, opt.GetUploadToken(), key, bytes.NewReader(data), dataLen, &extra)
+	err := opts.GetFormUploader().Put(context.Background(), &opts.putRet, opts.GetUploadToken(), key, bytes.NewReader(data), dataLen, &extra)
 	if err != nil {
 		return nil, err
 	}
 
-	return opt.putRet, nil
+	return opts.putRet, nil
 }
 
 // ResumeUploaderPutFile 文件分片上传/文件断点续传
-func (opt *options) ResumeUploaderPutFile(localFile string, key string) (interface{}, error) {
+func (opts *options) ResumeUploaderPutFile(localFile string, key string) (interface{}, error) {
 	var (
 		extra storage.RputV2Extra
 	)
 
-	if _, ok := opt.putExtra.(storage.RputV2Extra); ok {
-		extra = opt.putExtra.(storage.RputV2Extra)
+	if _, ok := opts.putExtra.(storage.RputV2Extra); ok {
+		extra = opts.putExtra.(storage.RputV2Extra)
 	}
 
-	err := opt.GetResumeUploader().PutFile(context.Background(), &opt.putRet, opt.GetUploadToken(), key, localFile, &extra)
+	err := opts.GetResumeUploader().PutFile(context.Background(), &opts.putRet, opts.GetUploadToken(), key, localFile, &extra)
 	if err != nil {
 		return nil, err
 	}
 
-	return opt.putRet, nil
+	return opts.putRet, nil
 }
 
 // MakePublicURL 生成下载文件链接 - 公开空间
-func (opt *options) MakePublicURL(domain string, key string) string {
+func (opts *options) MakePublicURL(domain string, key string) string {
 	return storage.MakePublicURL(domain, key)
 }
 
 // MakePublicURLv2 生成下载文件链接, 并且该方法确保 key 将会被 escape，并在 URL 后追加经过编码的查询参数 - 公开空间
-func (opt *options) MakePublicURLv2(domain string, key string, query url.Values) string {
+func (opts *options) MakePublicURLv2(domain string, key string, query url.Values) string {
 	return storage.MakePublicURLv2WithQuery(domain, key, query)
 }
 
 // MakePrivateURL 生成下载文件链接 - 私有空间
-func (opt *options) MakePrivateURL(domain string, key string, ttl int64) string {
-	return storage.MakePrivateURL(opt.GetMac(), domain, key, ttl)
+func (opts *options) MakePrivateURL(domain string, key string, ttl int64) string {
+	return storage.MakePrivateURL(opts.GetMac(), domain, key, ttl)
 }
 
 // MakePrivateURLv2 生成下载文件链接, 并且该方法确保 key 将会被 escape，并在 URL 后追加经过编码的查询参数 - 公开空间 - 私有空间
-func (opt *options) MakePrivateURLv2(domain string, key string, ttl int64, query url.Values) string {
-	return storage.MakePrivateURLv2WithQuery(opt.GetMac(), domain, key, query, ttl)
+func (opts *options) MakePrivateURLv2(domain string, key string, ttl int64, query url.Values) string {
+	return storage.MakePrivateURLv2WithQuery(opts.GetMac(), domain, key, query, ttl)
 }
 
 // GetFileInfo 获取文件信息
-func (opt *options) GetFileInfo(key string) (*storage.FileInfo, error) {
-	fileInfo, err := opt.GetBucketManager().Stat(opt.bucket, key)
+func (opts *options) GetFileInfo(key string) (*storage.FileInfo, error) {
+	fileInfo, err := opts.GetBucketManager().Stat(opts.bucket, key)
 	if err != nil {
 		return nil, err
 	}
@@ -261,38 +267,38 @@ func (opt *options) GetFileInfo(key string) (*storage.FileInfo, error) {
 }
 
 // ChangeFileMimeType 修改文件MimeType
-func (opt *options) ChangeFileMimeType(key string, mimeType string) error {
-	return opt.GetBucketManager().ChangeMime(opt.bucket, key, mimeType)
+func (opts *options) ChangeFileMimeType(key string, mimeType string) error {
+	return opts.GetBucketManager().ChangeMime(opts.bucket, key, mimeType)
 }
 
 // ChangeFileType 修改文件类型
-func (opt *options) ChangeFileType(key string, fileType int) error {
-	return opt.GetBucketManager().ChangeType(opt.bucket, key, fileType)
+func (opts *options) ChangeFileType(key string, fileType int) error {
+	return opts.GetBucketManager().ChangeType(opts.bucket, key, fileType)
 }
 
 // Move 移动或重命名文件
-func (opt *options) Move(destBucket string, srcKey string, destKey string, force bool) error {
-	return opt.GetBucketManager().Move(opt.bucket, srcKey, destBucket, destKey, force)
+func (opts *options) Move(destBucket string, srcKey string, destKey string, force bool) error {
+	return opts.GetBucketManager().Move(opts.bucket, srcKey, destBucket, destKey, force)
 }
 
 // Copy 复制文件副本
-func (opt *options) Copy(destBucket string, srcKey string, destKey string, force bool) error {
-	return opt.GetBucketManager().Copy(opt.bucket, srcKey, destBucket, destKey, force)
+func (opts *options) Copy(destBucket string, srcKey string, destKey string, force bool) error {
+	return opts.GetBucketManager().Copy(opts.bucket, srcKey, destBucket, destKey, force)
 }
 
 // Delete 删除空间中的文件
-func (opt *options) Delete(key string) error {
-	return opt.GetBucketManager().Delete(opt.bucket, key)
+func (opts *options) Delete(key string) error {
+	return opts.GetBucketManager().Delete(opts.bucket, key)
 }
 
 // DeleteAfterDays 设置或更新文件的生存时间
-func (opt *options) DeleteAfterDays(key string, days int) error {
-	return opt.GetBucketManager().DeleteAfterDays(opt.bucket, key, days)
+func (opts *options) DeleteAfterDays(key string, days int) error {
+	return opts.GetBucketManager().DeleteAfterDays(opts.bucket, key, days)
 }
 
 // ListFiles 获取指定前缀的文件列表
-func (opt *options) ListFiles(prefix string, delimiter string, marker string, limit int) (string, []storage.ListItem, error) {
-	entries, _, nextMarker, hasNext, err := opt.GetBucketManager().ListFiles(opt.bucket, prefix, delimiter, marker, limit)
+func (opts *options) ListFiles(prefix string, delimiter string, marker string, limit int) (string, []storage.ListItem, error) {
+	entries, _, nextMarker, hasNext, err := opts.GetBucketManager().ListFiles(opts.bucket, prefix, delimiter, marker, limit)
 
 	if hasNext {
 		// 获取下个 marker
@@ -303,42 +309,41 @@ func (opt *options) ListFiles(prefix string, delimiter string, marker string, li
 }
 
 // Fetch 抓取网络资源到空间 (指定保存的key)
-func (opt *options) Fetch(resURL string, key string) (storage.FetchRet, error) {
-	return opt.GetBucketManager().Fetch(resURL, opt.bucket, key)
+func (opts *options) Fetch(resURL string, key string) (storage.FetchRet, error) {
+	return opts.GetBucketManager().Fetch(resURL, opts.bucket, key)
 }
 
 // FetchWithoutKey 抓取网络资源到空间 (不指定保存的key，默认用文件hash作为文件名)
-func (opt *options) FetchWithoutKey(resURL string) (storage.FetchRet, error) {
-	return opt.GetBucketManager().FetchWithoutKey(resURL, opt.bucket)
+func (opts *options) FetchWithoutKey(resURL string) (storage.FetchRet, error) {
+	return opts.GetBucketManager().FetchWithoutKey(resURL, opts.bucket)
 }
 
 // UpdateObjectStatus 修改文件状态, 禁用和启用文件的可访问性
-func (opt *options) UpdateObjectStatus(bucket string, key string, enable bool) error {
-	return opt.GetBucketManager().UpdateObjectStatus(bucket, key, enable)
+func (opts *options) UpdateObjectStatus(bucket string, key string, enable bool) error {
+	return opts.GetBucketManager().UpdateObjectStatus(bucket, key, enable)
 }
 
 // RefreshUrls CDN 文件刷新, 单次请求链接不可以超过100个，如果超过，请分批发送请求
-func (opt *options) RefreshUrls(urlsToRefresh []string) (result cdn.RefreshResp, err error) {
-	return opt.GetCdnManager().RefreshUrls(urlsToRefresh)
+func (opts *options) RefreshUrls(urlsToRefresh []string) (result cdn.RefreshResp, err error) {
+	return opts.GetCdnManager().RefreshUrls(urlsToRefresh)
 }
 
 // CreateTimestampAntileechURL 构建时间戳防盗链访问链接
-func (opt *options) CreateTimestampAntileechURL(urlStr string, encryptKey string, ttl int64) (antileechURL string, err error) {
+func (opts *options) CreateTimestampAntileechURL(urlStr string, encryptKey string, ttl int64) (antileechURL string, err error) {
 	return cdn.CreateTimestampAntileechURL(urlStr, encryptKey, ttl)
 }
 
 // CreateBucket 创建一个七牛存储空间
-func (opt *options) CreateBucket(bucket string, regionID storage.RegionID) error {
-	return opt.GetBucketManager().CreateBucket(bucket, regionID)
+func (opts *options) CreateBucket(bucket string, regionID storage.RegionID) error {
+	return opts.GetBucketManager().CreateBucket(bucket, regionID)
 }
 
 // DropBucket 删除七牛存储空间
-func (opt *options) DropBucket(bucket string) error {
-	return opt.GetBucketManager().DropBucket(bucket)
+func (opts *options) DropBucket(bucket string) error {
+	return opts.GetBucketManager().DropBucket(bucket)
 }
 
 // Buckets 用来获取空间列表
-func (opt *options) Buckets(shared bool) (buckets []string, err error) {
-	return opt.GetBucketManager().Buckets(shared)
+func (opts *options) Buckets(shared bool) (buckets []string, err error) {
+	return opts.GetBucketManager().Buckets(shared)
 }
-

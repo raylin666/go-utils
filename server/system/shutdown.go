@@ -8,7 +8,7 @@ import (
 
 var _ Shutdown = (*shutdown)(nil)
 
-// Hook a graceful shutdown hook, default with signals of SIGINT and SIGTERM
+// Shutdown Hook a graceful shutdown hook, default with signals of SIGINT and SIGTERM
 type Shutdown interface {
 	// WithSignals add more signals into hook
 	WithSignals(signals ...syscall.Signal) Shutdown

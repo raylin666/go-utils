@@ -2,7 +2,7 @@ package dingtalk
 
 import (
 	httpclient "github.com/raylin666/go-utils/http"
-	"io/ioutil"
+	"io"
 	"testing"
 	"time"
 )
@@ -17,7 +17,7 @@ func TestRobotSendTextMessage(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	res, err := ioutil.ReadAll(resp.Body)
+	res, err := io.ReadAll(resp.Body)
 	if err != nil {
 		t.Fatal(err)
 	}

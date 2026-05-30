@@ -1,3 +1,6 @@
+// Package errors provides error wrapping with stack trace support.
+// It extends the standard errors package with caller stack information
+// for better debugging and error tracing.
 package errors
 
 import (
@@ -52,8 +55,10 @@ func Wrap(err error, msg string) Error {
 		return &errorItem{msg: fmt.Sprintf("%s; %s", msg, err.Error()), stack: callers()}
 	}
 
-	e.msg = fmt.Sprintf("%s; %s", msg, e.msg)
-	return e
+	return &errorItem{
+		msg:   fmt.Sprintf("%s; %s", msg, e.msg),
+		stack: e.stack,
+	}
 }
 
 // Wrapf with some extra message into err
@@ -69,8 +74,10 @@ func Wrapf(err error, format string, args ...interface{}) Error {
 		return &errorItem{msg: fmt.Sprintf("%s; %s", msg, err.Error()), stack: callers()}
 	}
 
-	e.msg = fmt.Sprintf("%s; %s", msg, e.msg)
-	return e
+	return &errorItem{
+		msg:   fmt.Sprintf("%s; %s", msg, e.msg),
+		stack: e.stack,
+	}
 }
 
 // WithStack add caller stack information

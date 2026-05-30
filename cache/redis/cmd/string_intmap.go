@@ -1,14 +1,14 @@
 package cmd
 
 import (
-	"github.com/go-redis/redis/v8"
+	"github.com/redis/go-redis/v9"
 )
 
 type StringIntMapCmd struct {
-	CMD *redis.StringIntMapCmd
+	CMD *redis.MapStringIntCmd
 }
 
-func NewStringIntMapCMD(cmd *redis.StringIntMapCmd) *StringIntMapCmd {
+func NewStringIntMapCMD(cmd *redis.MapStringIntCmd) *StringIntMapCmd {
 	return &StringIntMapCmd{cmd}
 }
 
